@@ -125,7 +125,7 @@ public class ChunkProviderServer implements IChunkProvider {
     }
 
     public Chunk getChunkAt(int i, int j, Runnable runnable) {
-        this.unloadQueue.remove(i, j);
+        //this.unloadQueue.remove(i, j);
         Chunk chunk = this.chunks.get(LongHash.toLong(i, j));
         ChunkRegionLoader loader = null;
 
@@ -154,7 +154,7 @@ public class ChunkProviderServer implements IChunkProvider {
     }
 
     public Chunk originalGetChunkAt(int i, int j) {
-        this.unloadQueue.remove(i, j);
+        //this.unloadQueue.remove(i, j);
         Chunk chunk = (Chunk) this.chunks.get(LongHash.toLong(i, j));
         boolean newChunk = false;
 
@@ -373,6 +373,7 @@ public class ChunkProviderServer implements IChunkProvider {
                 long chunkcoordinates = this.unloadQueue.popFirst();
                 Chunk chunk = this.chunks.get(chunkcoordinates);
                 if (chunk == null) continue;
+                if (this.world.getWorld().isChunkInUse(LongHash.msw(chunkcoordinates), LongHash.lsw(chunkcoordinates))) { continue; } // Poweruser
 
                 ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk);
                 server.getPluginManager().callEvent(event);
