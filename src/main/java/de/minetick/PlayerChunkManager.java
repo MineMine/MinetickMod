@@ -133,20 +133,13 @@ public class PlayerChunkManager {
                 ChunkCoordIntPair ccip = queue.poll();
                 if(buff.getPlayerChunkSendQueue().isOnServer(ccip) && !buff.getPlayerChunkSendQueue().alreadyLoaded(ccip)) {
                     if(allowGeneration && !this.skipChunkGeneration && allGenerated <= (this.world.getWorldData().getType().equals(WorldType.FLAT) ? 1 : 0)) {
-                        PlayerChunk c = this.pcm.a(ccip.x, ccip.z, false);
-                        if(c == null) {
-                            c = this.pcm.a(ccip.x, ccip.z, true);
-                            c.a(entityplayer);
-                            if(c.isNewChunk()) {
-                                buff.generatedChunks++;
-                                allGenerated++;
-                            } else {
-                                buff.loadedChunks++;
-                            }
+                        PlayerChunk c = this.pcm.a(ccip.x, ccip.z, true);
+                        c.a(entityplayer);
+                        if(c.isNewChunk()) {
+                            buff.generatedChunks++;
+                            allGenerated++;
                         } else {
-                            c = this.pcm.a(ccip.x, ccip.z, false);
-                            c.a(entityplayer);
-                            buff.enlistedChunks++;
+                            buff.loadedChunks++;
                         }
                         buff.getPlayerChunkSendQueue().queueForSend(c, entityplayer);
                         buff.remove(ccip);

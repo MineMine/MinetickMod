@@ -45,25 +45,22 @@ public class PlayerChunkSendQueue {
     }
     
     public boolean queueForSend(PlayerChunk playerchunk, EntityPlayer entityplayer) {
-        boolean a = false, b = false, c = false;
+        boolean alreadySent = false, onServer = false, inQueue = false;
         ChunkCoordIntPair ccip = PlayerChunk.a(playerchunk);
         synchronized(this.lock) {
-            a = this.clientData.contains(ccip);
-            b = this.serverData.contains(LongHash.toLong(ccip.x, ccip.z));
-            c = this.queue.contains(ccip);
-            if(!a && b && !c) {
-                this.queue.add(ccip);
-                this.player.chunkCoordIntPairQueue.add(ccip);
-                return true;
-            }
-        }
-        if(a || !b || c) {
-            if(!b) {
-                if(c || a) {
-                    playerchunk.b(entityplayer);
-                    this.removeFromClient(ccip);
+            alreadySent = this.clientData.contains(ccip);
+            onServer = this.serverData.contains(LongHash.toLong(ccip.x, ccip.z));
+            inQueue = this.queue.contains(ccip);
+            if(onServer) {
+                if(!inQueue && !alreadySent) {
+                    this.queue.add(ccip);
+                    this.player.chunkCoordIntPairQueue.add(ccip);
+                    return true;
                 }
-            }            
+            } else {
+                playerchunk.b(entityplayer);
+                this.removeFromClient(ccip);
+            }
         }
         return false;
     }
