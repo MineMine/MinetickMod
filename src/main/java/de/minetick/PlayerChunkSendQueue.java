@@ -16,7 +16,7 @@ import net.minecraft.server.PlayerChunk;
 public class PlayerChunkSendQueue {
 
     private LinkedHashSet<Long> serverData; // what it should be
-    private LinkedHashSet<ChunkCoordIntPair> clientData; // sent Data
+    private LinkedHashSet<Long> clientData; // sent Data
     private LinkedList<ChunkCoordIntPair> queue; // waiting to be sent
     private LinkedList<ChunkCoordIntPair> skippedChunks;
     private Object lock = new Object();
@@ -26,7 +26,7 @@ public class PlayerChunkSendQueue {
     public PlayerChunkSendQueue(PlayerChunkManager pcm, EntityPlayer entityplayer) {
         this.pcm = pcm;
         this.serverData = new LinkedHashSet<Long>();
-        this.clientData = new LinkedHashSet<ChunkCoordIntPair>();
+        this.clientData = new LinkedHashSet<Long>();
         this.queue = new LinkedList<ChunkCoordIntPair>();
         this.skippedChunks = new LinkedList<ChunkCoordIntPair>();
         this.player = entityplayer;
@@ -48,7 +48,7 @@ public class PlayerChunkSendQueue {
         boolean alreadySent = false, onServer = false, inQueue = false;
         ChunkCoordIntPair ccip = PlayerChunk.a(playerchunk);
         synchronized(this.lock) {
-            alreadySent = this.clientData.contains(ccip);
+            alreadySent = this.clientData.contains(LongHash.toLong(ccip.x, ccip.z));
             onServer = this.serverData.contains(LongHash.toLong(ccip.x, ccip.z));
             inQueue = this.queue.contains(ccip);
             if(onServer) {
@@ -102,7 +102,7 @@ public class PlayerChunkSendQueue {
     
     public void removeFromClient(ChunkCoordIntPair ccip) {
         synchronized(this.lock) {
-            this.clientData.remove(ccip);
+            this.clientData.remove(LongHash.toLong(ccip.x, ccip.z));
             this.queue.remove(ccip);
             this.player.chunkCoordIntPairQueue.remove(ccip);
         }
@@ -121,7 +121,7 @@ public class PlayerChunkSendQueue {
             boolean foundOne = false;
             while(!foundOne && !this.queue.isEmpty()) {
                 cc = this.queue.peekFirst();
-                if(!this.serverData.contains(LongHash.toLong(cc.x, cc.z)) || this.clientData.contains(cc)) {
+                if(!this.serverData.contains(LongHash.toLong(cc.x, cc.z)) || this.clientData.contains(LongHash.toLong(cc.x, cc.z))) {
                     this.queue.removeFirst();
                     this.player.chunkCoordIntPairQueue.remove(cc);
                     cc = null;
@@ -137,7 +137,7 @@ public class PlayerChunkSendQueue {
         synchronized(this.lock) {
             if(!this.queue.isEmpty()) {
                 ChunkCoordIntPair ccip = this.queue.removeFirst();
-                this.clientData.add(ccip);
+                this.clientData.add(LongHash.toLong(ccip.x, ccip.z));
                 this.player.chunkCoordIntPairQueue.remove(ccip);
             }
         }
@@ -181,17 +181,21 @@ public class PlayerChunkSendQueue {
     }
 
     public boolean isChunkSent(ChunkCoordIntPair ccip) {
-            return this.clientData.contains(ccip);
+        return this.clientData.contains(LongHash.toLong(ccip.x, ccip.z));
     }
 
     public boolean isAboutToSend(ChunkCoordIntPair location) {
+        synchronized(this.lock) {
             return this.skippedChunks.contains(location) || this.queue.contains(location);
+        }
     }
-    
+
     public boolean alreadyLoaded(ChunkCoordIntPair ccip) {
+        synchronized(this.lock) {
             return this.isChunkSent(ccip) || this.isAboutToSend(ccip);
+        }
     }
-    
+
     public boolean isOnServer(ChunkCoordIntPair ccip) {
             return this.serverData.contains(LongHash.toLong(ccip.x, ccip.z));
     }

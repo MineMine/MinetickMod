@@ -166,7 +166,7 @@ public class PlayerChunkManager {
             chunkQueue.requeuePreviouslySkipped();
             while(chunkQueue.hasChunksQueued() && chunkData.size() < PacketPlayOutMapChunkBulk.c() && skipped < 20) {
                 ChunkCoordIntPair chunkcoordintpair = chunkQueue.peekFirst(); // Poweruser
-                if (chunkcoordintpair != null) {
+                if (chunkcoordintpair != null && chunkQueue.isOnServer(chunkcoordintpair)) {
                     if(this.world.isLoaded(chunkcoordintpair.x << 4, 0, chunkcoordintpair.z << 4)) {
                         // CraftBukkit start - Get tile entities directly from the chunk instead of the world
                         Chunk chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
