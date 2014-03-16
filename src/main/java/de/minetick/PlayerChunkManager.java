@@ -111,7 +111,6 @@ public class PlayerChunkManager {
             buff.updatePos(entityplayer);
             int playerChunkPosX = buff.getPlayerRegionCenter()[0];
             int playerChunkPosZ = buff.getPlayerRegionCenter()[1];
-            //buff.getPlayerChunkSendQueue().checkServerDataSize(playerChunkPosX, playerChunkPosZ, this.getPlayerChunkMap().getViewDistance(), entityplayer);
 
             // High priority chunks
             PriorityQueue<ChunkCoordIntPair> queue = buff.getHighPriorityQueue();
