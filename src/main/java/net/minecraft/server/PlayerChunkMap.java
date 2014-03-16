@@ -267,6 +267,7 @@ public class PlayerChunkMap {
     }
 
     public void movePlayer(EntityPlayer entityplayer) {
+        /*
         int i = (int) entityplayer.locX >> 4;
         int j = (int) entityplayer.locZ >> 4;
         double d0 = entityplayer.d - entityplayer.locX;
@@ -279,10 +280,20 @@ public class PlayerChunkMap {
             int i1 = this.f;
             int j1 = i - k;
             int k1 = j - l;
-           // List<ChunkCoordIntPair> chunksToLoad = new LinkedList<ChunkCoordIntPair>(); // CraftBukkit
+        */
+            int i = MathHelper.floor(entityplayer.locX) >> 4;
+            int j = MathHelper.floor(entityplayer.locZ) >> 4;
+            int k = MathHelper.floor(entityplayer.d) >> 4;
+            int l = MathHelper.floor(entityplayer.e) >> 4;
+            int j1 = i - k;
+            int k1 = j - l;
+            entityplayer.d = entityplayer.locX;
+            entityplayer.e = entityplayer.locZ;
+            // List<ChunkCoordIntPair> chunksToLoad = new LinkedList<ChunkCoordIntPair>(); // CraftBukkit
             if (j1 != 0 || k1 != 0) {
                 PlayerChunkBuffer buffer = this.playerChunkManager.getChunkBuffer(entityplayer); // Poweruser
-                buffer.playerMoved(false);
+                buffer.playerMoved(i, j);
+
                 /*
                 boolean areaExists = this.playerChunkManager.doAllCornersOfPlayerAreaExist(i, j, this.f); // Poweruser
 
@@ -327,7 +338,7 @@ public class PlayerChunkMap {
                 */
                 // CraftBukkit end
             }
-        }
+        //}
     }
 
     public boolean a(EntityPlayer entityplayer, int i, int j) {

@@ -109,8 +109,8 @@ public class PlayerChunkManager {
             }
             buff.resetCounters();
             buff.updatePos(entityplayer);
-            int playerChunkPosX = (int) entityplayer.locX >> 4;
-            int playerChunkPosZ = (int) entityplayer.locZ >> 4;
+            int playerChunkPosX = buff.getPlayerRegionCenter()[0];
+            int playerChunkPosZ = buff.getPlayerRegionCenter()[1];
             buff.getPlayerChunkSendQueue().checkServerDataSize(playerChunkPosX, playerChunkPosZ, this.getPlayerChunkMap().getViewDistance(), entityplayer);
 
             // High priority chunks

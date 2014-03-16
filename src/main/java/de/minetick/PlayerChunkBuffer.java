@@ -11,6 +11,7 @@ import de.minetick.PlayerChunkManager.ChunkPosEnum;
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ChunkCoordIntPair;
+import net.minecraft.server.MathHelper;
 import net.minecraft.server.PlayerChunk;
 import net.minecraft.server.PlayerChunkMap;
 
@@ -26,6 +27,8 @@ public class PlayerChunkBuffer {
     private PlayerChunkManager playerChunkManager;
     private PlayerChunkSendQueue sendQueue;
     private boolean playerHasMoved = false;
+    private int[] playerRegionCenter;
+    private int[] lastMovement;
 
     public PlayerChunkBuffer(PlayerChunkManager playerChunkManager, EntityPlayer ent) {
         this.playerChunkManager = playerChunkManager;
@@ -34,6 +37,8 @@ public class PlayerChunkBuffer {
         this.sendQueue = new PlayerChunkSendQueue(this.playerChunkManager, ent);
         this.comp = new ChunkCoordComparator(ent);
         this.pq = new PriorityQueue<ChunkCoordIntPair>(750, this.comp);
+        this.playerRegionCenter = new int[] { MathHelper.floor(ent.locX) >> 4, MathHelper.floor(ent.locZ) >> 4 };
+        this.lastMovement = new int[] { 0, 0 };
     }
 
     public PlayerChunkSendQueue getPlayerChunkSendQueue() {
@@ -44,15 +49,13 @@ public class PlayerChunkBuffer {
         this.comp.setPos(entityplayer);
         if(this.playerHasMoved) {
             PlayerChunkMap pcm = this.playerChunkManager.getPlayerChunkMap();
-            int newCenterX = (int) entityplayer.locX >> 4;
-            int newCenterZ = (int) entityplayer.locZ >> 4;
-            int oldCenterX = (int) entityplayer.d >> 4;
-            int oldCenterZ = (int) entityplayer.e >> 4;
-            int diffX = newCenterX - oldCenterX;
-            int diffZ = newCenterZ - oldCenterZ;
+            int newCenterX = this.playerRegionCenter[0];
+            int newCenterZ = this.playerRegionCenter[1];
+            int oldCenterX = newCenterX - this.lastMovement[0];
+            int oldCenterZ = newCenterZ - this.lastMovement[1];
+            int diffX = this.lastMovement[0];
+            int diffZ = this.lastMovement[1];
             if(diffX == 0 && diffZ == 0) {
-                entityplayer.d = entityplayer.locX;
-                entityplayer.e = entityplayer.locZ;
                 return this.comp;
             }
             int radius = pcm.getViewDistance();
@@ -90,9 +93,6 @@ public class PlayerChunkBuffer {
                     }
                 }
             }
-
-            entityplayer.d = entityplayer.locX;
-            entityplayer.e = entityplayer.locZ;
         }
         this.playerHasMoved = false;
         return this.comp;
@@ -154,7 +154,19 @@ public class PlayerChunkBuffer {
         this.loadedChunks = 0;
     }
 
-    public void playerMoved(boolean added) {
+    public void playerMoved(int newCenterX, int newCenterZ) {
+        this.lastMovement[0] = newCenterX - this.playerRegionCenter[0];
+        this.lastMovement[1] = newCenterZ - this.playerRegionCenter[1];
+        this.playerRegionCenter[0] = newCenterX;
+        this.playerRegionCenter[1] = newCenterZ;
         this.playerHasMoved = true;
+    }
+
+    public int[] getPlayerRegionCenter() {
+        return this.playerRegionCenter;
+    }
+
+    public int[] getLastMovement() {
+        return this.lastMovement;
     }
 }
