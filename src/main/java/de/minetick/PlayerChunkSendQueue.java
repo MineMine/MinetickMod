@@ -7,8 +7,6 @@ import java.util.LinkedList;
 
 import org.bukkit.craftbukkit.util.LongHash;
 
-import de.minetick.PlayerChunkManager.ChunkPosEnum;
-
 import net.minecraft.server.ChunkCoordIntPair;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PlayerChunk;
@@ -98,7 +96,7 @@ public class PlayerChunkSendQueue {
             boolean foundOne = false;
             while(!foundOne && !this.queue.isEmpty()) {
                 ccip = this.queue.peekFirst();
-                if(!this.isOnServer(ccip)) { // || this.isChunkSent(ccip)) {
+                if(!this.isOnServer(ccip)) {
                     this.removeFromQueue(ccip);
                     ccip = null;
                 } else {
@@ -116,8 +114,6 @@ public class PlayerChunkSendQueue {
                 if(ok) {
                     this.clientData.add(LongHash.toLong(ccip.x, ccip.z));
                     this.player.chunkCoordIntPairQueue.remove(ccip);
-                } else {
-                    System.out.println("Discarding chunk (REMOVEFIRST) + (" + ccip.x + "/" + ccip.z + ")");
                 }
             }
         }
@@ -130,8 +126,6 @@ public class PlayerChunkSendQueue {
                 this.player.chunkCoordIntPairQueue.remove(ccip);
                 if(this.isOnServer(ccip) && !this.isChunkSent(ccip)) {
                      this.skippedChunks.addLast(ccip);
-                } else {
-                    System.out.println("Discarding chunk (SKIP) (" + ccip.x + "/" + ccip.z + ") S: " + this.isOnServer(ccip) + " iS: " + this.isChunkSent(ccip));
                 }
             }
         }
@@ -146,8 +140,6 @@ public class PlayerChunkSendQueue {
                     count++;
                     this.queue.addFirst(ccip);
                     this.player.chunkCoordIntPairQueue.add(ccip);
-                } else {
-                    System.out.println("Discarding chunk (REQUEUE) (" + ccip.x + "/" + ccip.z + ") S: " + this.isOnServer(ccip) + " AL: " + this.alreadyLoaded(ccip));
                 }
             }
         }

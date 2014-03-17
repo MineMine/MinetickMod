@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.minetick.PlayerChunkManager;
-import de.minetick.PlayerChunkManager.ChunkPosEnum;
 import de.minetick.PlayerChunkSendQueue;
 import de.minetick.packetbuilder.PacketBuilderChunkData;
 import de.minetick.packetbuilder.PacketBuilderThreadPool;

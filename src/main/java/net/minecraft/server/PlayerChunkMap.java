@@ -277,7 +277,7 @@ public class PlayerChunkMap {
         // Poweruser start
         double distX = entityplayer.d - entityplayer.locX;
         double distZ = entityplayer.e - entityplayer.locZ;
-        if((distX * distX + distZ * distZ) >= 64.0D) {
+        if((distX * distX + distZ * distZ) >= 128.0D) {
             int newPosX = MathHelper.floor(entityplayer.locX) >> 4;
             int newPosZ = MathHelper.floor(entityplayer.locZ) >> 4;
             int oldPosX = MathHelper.floor(entityplayer.d) >> 4;
@@ -286,12 +286,11 @@ public class PlayerChunkMap {
             int diffZ = newPosZ - oldPosZ;
             if (diffX != 0 || diffZ != 0) {
                 PlayerChunkBuffer buffer = this.playerChunkManager.getChunkBuffer(entityplayer); // Poweruser
-                buffer.playerMoved(newPosX, newPosZ);
-                if(diffX >= 2 || diffX <= -2 || diffZ >= 2 || diffZ <= -2) {
-                    System.out.println("Moved by " + diffX + " / " + diffZ);
+                if(buffer != null) {
+                    buffer.playerMoved(newPosX, newPosZ);
+                    entityplayer.d = entityplayer.locX;
+                    entityplayer.e = entityplayer.locZ;
                 }
-                entityplayer.d = entityplayer.locX;
-                entityplayer.e = entityplayer.locZ;
             }
         }
         // Poweruser end

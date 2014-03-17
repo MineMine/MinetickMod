@@ -122,8 +122,6 @@ public class PlayerChunkManager {
                     if(buff.getPlayerChunkSendQueue().queueForSend(c, entityplayer)) {
                         buff.loadedChunks++;
                     }
-                } else {
-                    System.out.println("Discarding chunk (" + ccip.x + "/" + ccip.z + ") S: " + buff.getPlayerChunkSendQueue().isOnServer(ccip) + " AL: " + buff.getPlayerChunkSendQueue().alreadyLoaded(ccip));
                 }
                 buff.remove(ccip);
             }
@@ -160,59 +158,43 @@ public class PlayerChunkManager {
             }
 
             PlayerChunkSendQueue chunkQueue = buff.getPlayerChunkSendQueue();
-            // Poweruser start - moved here from EntityPlayer.h()
             for(int w = 0; w < packetsPerTick; w++) {
-            PacketBuilderChunkDataBulk chunkData = new PacketBuilderChunkDataBulk();
-            int skipped = 0;
-            chunkQueue.requeuePreviouslySkipped();
-            while(chunkQueue.hasChunksQueued() && chunkData.size() < PacketPlayOutMapChunkBulk.c() && skipped < 20) {
-                ChunkCoordIntPair chunkcoordintpair = chunkQueue.peekFirst(); // Poweruser
-                if (chunkcoordintpair != null && chunkQueue.isOnServer(chunkcoordintpair)) {
-                    if(this.world.isLoaded(chunkcoordintpair.x << 4, 0, chunkcoordintpair.z << 4)) {
-                        // CraftBukkit start - Get tile entities directly from the chunk instead of the world
-                        Chunk chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
-                        if(chunk.k()) {
-                            chunkData.addChunk(chunk);
-                            chunkQueue.removeFirst(true); // Poweruser
-                        }
-                        // CraftBukkit end
-                        else {
+                PacketBuilderChunkDataBulk chunkData = new PacketBuilderChunkDataBulk();
+                int skipped = 0;
+                chunkQueue.requeuePreviouslySkipped();
+                while(chunkQueue.hasChunksQueued() && chunkData.size() < PacketPlayOutMapChunkBulk.c() && skipped < 20) {
+                    ChunkCoordIntPair chunkcoordintpair = chunkQueue.peekFirst();
+                    if (chunkcoordintpair != null && chunkQueue.isOnServer(chunkcoordintpair)) {
+                        if(this.world.isLoaded(chunkcoordintpair.x << 4, 0, chunkcoordintpair.z << 4)) {
+                            Chunk chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
+                            if(chunk.k()) {
+                                chunkData.addChunk(chunk);
+                                chunkQueue.removeFirst(true);
+                            } else {
+                                chunkQueue.skipFirst();
+                                skipped++;
+                            }
+                        } else {
                             chunkQueue.skipFirst();
                             skipped++;
                         }
                     } else {
-                        chunkQueue.skipFirst();
-                        skipped++;
+                        chunkQueue.removeFirst(false);
                     }
-                } else {
-                    chunkQueue.removeFirst(false);
+                }
+                if (!chunkData.isEmpty()) {
+                    PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunkBulk(entityplayer.playerConnection, chunkData, chunkQueue));
                 }
             }
-            if (!chunkData.isEmpty()) {
-                //entityplayer.playerConnection.sendPacket(new PacketPlayOutMapChunkBulk(arraylist));
-                PacketBuilderThreadPool.addJobStatic(new PBJobPlayOutMapChunkBulk(entityplayer.playerConnection, chunkData, chunkQueue)); // Poweruser
-            }
-            }
-            // Poweruser end
         }
         return allGenerated;
     }
 
-    public static ChunkPosEnum isWithinRadius(int positionx, int positionz, int centerx, int centerz, int radius) {
+    public static boolean isWithinRadius(int positionx, int positionz, int centerx, int centerz, int radius) {
         int distancex = positionx - centerx;
         int distancez = positionz - centerz;
 
-        boolean within = distancex >= -radius && distancex <= radius ? distancez >= -radius && distancez <= radius : false;
-        if(within) {
-            return ChunkPosEnum.INSIDE;
-        } else {
-            return ChunkPosEnum.OUTSIDE;
-        }
-    }
-
-    public enum ChunkPosEnum {
-        INSIDE,
-        OUTSIDE;
+        return (distancex >= -radius && distancex <= radius) ? (distancez >= -radius && distancez <= radius) : false;
     }
 
     public boolean doAllCornersOfPlayerAreaExist(int x, int z, int radius) {

@@ -1,5 +1,6 @@
 package de.minetick;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -7,8 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import de.minetick.PlayerChunkManager.ChunkPosEnum;
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ChunkCoordIntPair;
@@ -30,7 +29,7 @@ public class PlayerChunkBuffer {
     private boolean playerHasMoved = false;
     private int[] playerRegionCenter;
     private int[] lastMovement;
-    private ConcurrentLinkedQueue<PlayerMovement> movement;
+    private ArrayDeque<PlayerMovement> movement;
 
     public PlayerChunkBuffer(PlayerChunkManager playerChunkManager, EntityPlayer ent) {
         this.playerChunkManager = playerChunkManager;
@@ -41,7 +40,7 @@ public class PlayerChunkBuffer {
         this.pq = new PriorityQueue<ChunkCoordIntPair>(750, this.comp);
         this.playerRegionCenter = new int[] { MathHelper.floor(ent.locX) >> 4, MathHelper.floor(ent.locZ) >> 4 };
         this.lastMovement = new int[] { 0, 0 };
-        this.movement = new ConcurrentLinkedQueue<PlayerMovement>();
+        this.movement = new ArrayDeque<PlayerMovement>();
     }
 
     public PlayerChunkSendQueue getPlayerChunkSendQueue() {
@@ -53,12 +52,16 @@ public class PlayerChunkBuffer {
         if(!this.movement.isEmpty()) {
             PlayerChunkMap pcm = this.playerChunkManager.getPlayerChunkMap();
             PlayerMovement movement = this.movement.poll();
-            int newCenterX = movement.centerX;
-            int newCenterZ = movement.centerZ;
-            int oldCenterX = newCenterX - movement.movementX;
-            int oldCenterZ = newCenterZ - movement.movementZ;
-            int diffX = movement.movementX;
-            int diffZ = movement.movementZ;
+            while(!this.movement.isEmpty()) {
+                movement.addMovement(this.movement.poll(), true);
+            }
+            int newCenterX = movement.getCenterX();
+            int newCenterZ = movement.getCenterZ();
+            int diffX = movement.getMovementX();
+            int diffZ = movement.getMovementZ();
+            int oldCenterX = newCenterX - diffX;
+            int oldCenterZ = newCenterZ - diffZ;
+
             if(diffX == 0 && diffZ == 0) {
                 return this.comp;
             }
@@ -68,8 +71,7 @@ public class PlayerChunkBuffer {
             for (int pointerX = newCenterX - radius; pointerX <= newCenterX + radius; pointerX++) {
                 for (int pointerZ = newCenterZ - radius; pointerZ <= newCenterZ + radius; pointerZ++) {
                     ChunkCoordIntPair ccip;
-                    ChunkPosEnum pos = PlayerChunkManager.isWithinRadius(pointerX, pointerZ, oldCenterX, oldCenterZ, radius);
-                    if(!pos.equals(ChunkPosEnum.INSIDE)) {
+                    if(!PlayerChunkManager.isWithinRadius(pointerX, pointerZ, oldCenterX, oldCenterZ, radius)) {
                         ccip = new ChunkCoordIntPair(pointerX, pointerZ);
                         if(!this.sendQueue.alreadyLoaded(ccip) && !this.sendQueue.isOnServer(ccip)) {
                             added++;
@@ -79,14 +81,10 @@ public class PlayerChunkBuffer {
                             } else {
                                 this.addLowPriorityChunk(ccip);
                             }
-                        } else {
-                            System.out.println("Discarding chunk (LOADING) (" + ccip.x + "/" + ccip.z + ") AL: "+ this.sendQueue.alreadyLoaded(ccip) + " S: " + this.sendQueue.isOnServer(ccip) + " ATS: " + this.sendQueue.isAboutToSend(ccip) + " isSent: " + this.sendQueue.isChunkSent(ccip));
                         }
-                        //continue;
                     }
 
-                    pos = PlayerChunkManager.isWithinRadius(pointerX - diffX, pointerZ - diffZ, newCenterX, newCenterZ, radius);
-                    if(!pos.equals(ChunkPosEnum.INSIDE)) {
+                    if(!PlayerChunkManager.isWithinRadius(pointerX - diffX, pointerZ - diffZ, newCenterX, newCenterZ, radius)) {
                         removed++;
                         ccip = new ChunkCoordIntPair(pointerX - diffX, pointerZ - diffZ);
                         this.sendQueue.removeFromServer(ccip.x, ccip.z);
@@ -124,8 +122,7 @@ public class PlayerChunkBuffer {
     }
 
     public void addLowPriorityChunk(ChunkCoordIntPair ccip) {
-        //this.lowPriorityBuffer.add(ccip);
-        this.highPriorityBuffer.add(ccip);
+        this.lowPriorityBuffer.add(ccip);
     }
 
     public void addHighPriorityChunk(ChunkCoordIntPair ccip) {
@@ -166,16 +163,9 @@ public class PlayerChunkBuffer {
         this.playerRegionCenter[0] = newCenterX;
         this.playerRegionCenter[1] = newCenterZ;
         this.movement.add(new PlayerMovement(this.playerRegionCenter, this.lastMovement));
-        if(this.movement.size() > 1) {
-            System.out.println("Movements in Queue: " + this.movement.size());
-        }
     }
 
     public int[] getPlayerRegionCenter() {
         return this.playerRegionCenter;
-    }
-
-    public int[] getLastMovement() {
-        return this.lastMovement;
     }
 }
