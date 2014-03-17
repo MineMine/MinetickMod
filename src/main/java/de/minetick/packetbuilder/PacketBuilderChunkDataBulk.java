@@ -57,7 +57,7 @@ public class PacketBuilderChunkDataBulk {
         }
     }
 
-    public void queueChunksForTracking(EntityPlayer entityplayer) {
+    public void queueChunksForTracking(EntityPlayer entityplayer, PlayerChunkSendQueue sendQueue) {
         entityplayer.chunksForTracking.addAll(this.map.keySet());
     }
 

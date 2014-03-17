@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.PriorityQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.minetick.PlayerChunkManager.ChunkPosEnum;
 
@@ -29,6 +30,7 @@ public class PlayerChunkBuffer {
     private boolean playerHasMoved = false;
     private int[] playerRegionCenter;
     private int[] lastMovement;
+    private ConcurrentLinkedQueue<PlayerMovement> movement;
 
     public PlayerChunkBuffer(PlayerChunkManager playerChunkManager, EntityPlayer ent) {
         this.playerChunkManager = playerChunkManager;
@@ -39,6 +41,7 @@ public class PlayerChunkBuffer {
         this.pq = new PriorityQueue<ChunkCoordIntPair>(750, this.comp);
         this.playerRegionCenter = new int[] { MathHelper.floor(ent.locX) >> 4, MathHelper.floor(ent.locZ) >> 4 };
         this.lastMovement = new int[] { 0, 0 };
+        this.movement = new ConcurrentLinkedQueue<PlayerMovement>();
     }
 
     public PlayerChunkSendQueue getPlayerChunkSendQueue() {
@@ -47,19 +50,21 @@ public class PlayerChunkBuffer {
 
     public Comparator<ChunkCoordIntPair> updatePos(EntityPlayer entityplayer) {
         this.comp.setPos(entityplayer);
-        if(this.playerHasMoved) {
+        if(!this.movement.isEmpty()) {
             PlayerChunkMap pcm = this.playerChunkManager.getPlayerChunkMap();
-            int newCenterX = this.playerRegionCenter[0];
-            int newCenterZ = this.playerRegionCenter[1];
-            int oldCenterX = newCenterX - this.lastMovement[0];
-            int oldCenterZ = newCenterZ - this.lastMovement[1];
-            int diffX = this.lastMovement[0];
-            int diffZ = this.lastMovement[1];
+            PlayerMovement movement = this.movement.poll();
+            int newCenterX = movement.centerX;
+            int newCenterZ = movement.centerZ;
+            int oldCenterX = newCenterX - movement.movementX;
+            int oldCenterZ = newCenterZ - movement.movementZ;
+            int diffX = movement.movementX;
+            int diffZ = movement.movementZ;
             if(diffX == 0 && diffZ == 0) {
-                //return this.comp;
+                return this.comp;
             }
             int radius = pcm.getViewDistance();
             int added = 0, removed = 0;
+            boolean areaExists = this.playerChunkManager.doAllCornersOfPlayerAreaExist(newCenterX, newCenterZ, radius);
             for (int pointerX = newCenterX - radius; pointerX <= newCenterX + radius; pointerX++) {
                 for (int pointerZ = newCenterZ - radius; pointerZ <= newCenterZ + radius; pointerZ++) {
                     ChunkCoordIntPair ccip;
@@ -69,11 +74,13 @@ public class PlayerChunkBuffer {
                         if(!this.sendQueue.alreadyLoaded(ccip) && !this.sendQueue.isOnServer(ccip)) {
                             added++;
                             this.sendQueue.addToServer(pointerX, pointerZ);
-                            if(this.playerChunkManager.doAllCornersOfPlayerAreaExist(newCenterX, newCenterZ, radius)) {
+                            if(areaExists) {
                                 this.addHighPriorityChunk(ccip);
                             } else {
                                 this.addLowPriorityChunk(ccip);
                             }
+                        } else {
+                            System.out.println("Discarding chunk (LOADING) (" + ccip.x + "/" + ccip.z + ") AL: "+ this.sendQueue.alreadyLoaded(ccip) + " S: " + this.sendQueue.isOnServer(ccip) + " ATS: " + this.sendQueue.isAboutToSend(ccip) + " isSent: " + this.sendQueue.isChunkSent(ccip));
                         }
                         //continue;
                     }
@@ -93,7 +100,6 @@ public class PlayerChunkBuffer {
                 }
             }
         }
-        this.playerHasMoved = false;
         return this.comp;
     }
 
@@ -118,7 +124,8 @@ public class PlayerChunkBuffer {
     }
 
     public void addLowPriorityChunk(ChunkCoordIntPair ccip) {
-        this.lowPriorityBuffer.add(ccip);
+        //this.lowPriorityBuffer.add(ccip);
+        this.highPriorityBuffer.add(ccip);
     }
 
     public void addHighPriorityChunk(ChunkCoordIntPair ccip) {
@@ -158,7 +165,10 @@ public class PlayerChunkBuffer {
         this.lastMovement[1] = newCenterZ - this.playerRegionCenter[1];
         this.playerRegionCenter[0] = newCenterX;
         this.playerRegionCenter[1] = newCenterZ;
-        this.playerHasMoved = true;
+        this.movement.add(new PlayerMovement(this.playerRegionCenter, this.lastMovement));
+        if(this.movement.size() > 1) {
+            System.out.println("Movements in Queue: " + this.movement.size());
+        }
     }
 
     public int[] getPlayerRegionCenter() {

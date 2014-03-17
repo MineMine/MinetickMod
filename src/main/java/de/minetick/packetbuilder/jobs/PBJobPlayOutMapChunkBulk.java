@@ -33,7 +33,7 @@ public class PBJobPlayOutMapChunkBulk implements PacketBuilderJobInterface {
             packet.setPendingUses(1);
             this.connection.sendPacket(packet);
             this.chunkData.sendTileEntities(this.connection);
-            this.chunkData.queueChunksForTracking(this.connection.player);
+            this.chunkData.queueChunksForTracking(this.connection.player, this.chunkQueue);
             this.chunkData.clear();
         } else {
             packet.discard();

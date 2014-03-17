@@ -71,29 +71,6 @@ public class PlayerChunkSendQueue {
         }
     }
     
-    public void checkServerDataSize(int x, int z, int viewDistance, EntityPlayer entityplayer) {
-        int a = viewDistance * 2 + 1;
-        if(this.serverData.size() > a*a) {
-            synchronized(this.lock) {
-                Iterator<Long> iter = this.serverData.iterator();
-                while(iter.hasNext()) {
-                    Long l = iter.next();
-                    int i = LongHash.lsw(l.longValue());
-                    int j = LongHash.msw(l.longValue());
-                    ChunkPosEnum pos = PlayerChunkManager.isWithinRadius(i, j, x, z, viewDistance);
-                    if(pos.equals(ChunkPosEnum.OUTSIDE)) {
-                        PlayerChunk c = this.pcm.getPlayerChunkMap().a(i, j, false);
-                        if(c != null) {
-                            c.b(entityplayer);
-                            this.removeFromClient(PlayerChunk.a(c));
-                        }
-                        iter.remove(); // remove from server
-                    }
-                }
-            }
-        }
-    }
-    
     public void removeFromServer(int x, int z) {
         synchronized(this.lock) {
             this.serverData.remove(LongHash.toLong(x, z));
@@ -121,7 +98,7 @@ public class PlayerChunkSendQueue {
             boolean foundOne = false;
             while(!foundOne && !this.queue.isEmpty()) {
                 ccip = this.queue.peekFirst();
-                if(!this.isOnServer(ccip) || this.isChunkSent(ccip)) {
+                if(!this.isOnServer(ccip)) { // || this.isChunkSent(ccip)) {
                     this.removeFromQueue(ccip);
                     ccip = null;
                 } else {
@@ -132,12 +109,16 @@ public class PlayerChunkSendQueue {
         return ccip;
     }
     
-    public void removeFirst() {
+    public void removeFirst(boolean ok) {
         synchronized(this.lock) {
             if(!this.queue.isEmpty()) {
                 ChunkCoordIntPair ccip = this.queue.removeFirst();
-                this.clientData.add(LongHash.toLong(ccip.x, ccip.z));
-                this.player.chunkCoordIntPairQueue.remove(ccip);
+                if(ok) {
+                    this.clientData.add(LongHash.toLong(ccip.x, ccip.z));
+                    this.player.chunkCoordIntPairQueue.remove(ccip);
+                } else {
+                    System.out.println("Discarding chunk (REMOVEFIRST) + (" + ccip.x + "/" + ccip.z + ")");
+                }
             }
         }
     }
@@ -149,6 +130,8 @@ public class PlayerChunkSendQueue {
                 this.player.chunkCoordIntPairQueue.remove(ccip);
                 if(this.isOnServer(ccip) && !this.isChunkSent(ccip)) {
                      this.skippedChunks.addLast(ccip);
+                } else {
+                    System.out.println("Discarding chunk (SKIP) (" + ccip.x + "/" + ccip.z + ") S: " + this.isOnServer(ccip) + " iS: " + this.isChunkSent(ccip));
                 }
             }
         }
@@ -163,6 +146,8 @@ public class PlayerChunkSendQueue {
                     count++;
                     this.queue.addFirst(ccip);
                     this.player.chunkCoordIntPairQueue.add(ccip);
+                } else {
+                    System.out.println("Discarding chunk (REQUEUE) (" + ccip.x + "/" + ccip.z + ") S: " + this.isOnServer(ccip) + " AL: " + this.alreadyLoaded(ccip));
                 }
             }
         }

@@ -40,6 +40,10 @@ public class PlayerChunkMap {
     public int getViewDistance() {
         return this.f;
     }
+
+    public PlayerChunkManager getPlayerChunkManager() {
+        return this.playerChunkManager;
+    }
     // Poweruser end
 
     public PlayerChunkMap(WorldServer worldserver, int i) {
@@ -133,9 +137,12 @@ public class PlayerChunkMap {
     }
 
     public void addPlayer(EntityPlayer entityplayer) {
+        /*
         int i = (int) entityplayer.locX >> 4;
         int j = (int) entityplayer.locZ >> 4;
-
+        */
+        int i = MathHelper.floor(entityplayer.locX) >> 4;
+        int j = MathHelper.floor(entityplayer.locZ) >> 4;
         entityplayer.d = entityplayer.locX;
         entityplayer.e = entityplayer.locZ;
 
@@ -267,78 +274,27 @@ public class PlayerChunkMap {
     }
 
     public void movePlayer(EntityPlayer entityplayer) {
-        /*
-        int i = (int) entityplayer.locX >> 4;
-        int j = (int) entityplayer.locZ >> 4;
-        double d0 = entityplayer.d - entityplayer.locX;
-        double d1 = entityplayer.e - entityplayer.locZ;
-        double d2 = d0 * d0 + d1 * d1;
-
-        if (d2 >= 64.0D) {
-            int k = (int) entityplayer.d >> 4;
-            int l = (int) entityplayer.e >> 4;
-            int i1 = this.f;
-            int j1 = i - k;
-            int k1 = j - l;
-        */
-            int i = MathHelper.floor(entityplayer.locX) >> 4;
-            int j = MathHelper.floor(entityplayer.locZ) >> 4;
-            int k = MathHelper.floor(entityplayer.d) >> 4;
-            int l = MathHelper.floor(entityplayer.e) >> 4;
-            int j1 = i - k;
-            int k1 = j - l;
-            entityplayer.d = entityplayer.locX;
-            entityplayer.e = entityplayer.locZ;
-            // List<ChunkCoordIntPair> chunksToLoad = new LinkedList<ChunkCoordIntPair>(); // CraftBukkit
-            if (j1 != 0 || k1 != 0) {
+        // Poweruser start
+        double distX = entityplayer.d - entityplayer.locX;
+        double distZ = entityplayer.e - entityplayer.locZ;
+        if((distX * distX + distZ * distZ) >= 64.0D) {
+            int newPosX = MathHelper.floor(entityplayer.locX) >> 4;
+            int newPosZ = MathHelper.floor(entityplayer.locZ) >> 4;
+            int oldPosX = MathHelper.floor(entityplayer.d) >> 4;
+            int oldPosZ = MathHelper.floor(entityplayer.e) >> 4;
+            int diffX = newPosX - oldPosX;
+            int diffZ = newPosZ - oldPosZ;
+            if (diffX != 0 || diffZ != 0) {
                 PlayerChunkBuffer buffer = this.playerChunkManager.getChunkBuffer(entityplayer); // Poweruser
-                buffer.playerMoved(i, j);
-
-                /*
-                boolean areaExists = this.playerChunkManager.doAllCornersOfPlayerAreaExist(i, j, this.f); // Poweruser
-
-                for (int l1 = i - i1; l1 <= i + i1; ++l1) {
-                    for (int i2 = j - i1; i2 <= j + i1; ++i2) {
-                        ChunkCoordIntPair ccip; // Poweruser
-                        if (!this.a(l1, i2, k, l, i1)) {
-                            //chunksToLoad.add(new ChunkCoordIntPair(l1, i2)); // CraftBukkit
-                            // Poweruser start
-                            ccip = new ChunkCoordIntPair(l1, i2);
-                            if(areaExists) {
-                                buffer.addHighPriorityChunk(ccip);
-                            } else {
-                                buffer.addLowPriorityChunk(ccip);
-                            }
-                            // Poweruser end
-                        }
-
-                        if (!this.a(l1 - j1, i2 - k1, i, j, i1)) {
-                            PlayerChunk playerchunk = this.a(l1 - j1, i2 - k1, false);
-                            if (playerchunk != null) {
-                                playerchunk.b(entityplayer);
-                            }
-                        }
-                    }
+                buffer.playerMoved(newPosX, newPosZ);
+                if(diffX >= 2 || diffX <= -2 || diffZ >= 2 || diffZ <= -2) {
+                    System.out.println("Moved by " + diffX + " / " + diffZ);
                 }
-
-                //this.b(entityplayer);
                 entityplayer.d = entityplayer.locX;
                 entityplayer.e = entityplayer.locZ;
-
-                // CraftBukkit start - send nearest chunks first
-                //Collections.sort(chunksToLoad, new ChunkCoordComparator(entityplayer));
-                //for (ChunkCoordIntPair pair : chunksToLoad) {
-                    //this.a(pair.x, pair.z, true).a(entityplayer);
-                //}
-            */
-                /*
-                if (i1 > 1 || i1 < -1 || j1 > 1 || j1 < -1) {
-                    Collections.sort(entityplayer.chunkCoordIntPairQueue, new ChunkCoordComparator(entityplayer));
-                }
-                */
-                // CraftBukkit end
             }
-        //}
+        }
+        // Poweruser end
     }
 
     public boolean a(EntityPlayer entityplayer, int i, int j) {

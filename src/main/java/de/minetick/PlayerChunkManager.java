@@ -122,6 +122,8 @@ public class PlayerChunkManager {
                     if(buff.getPlayerChunkSendQueue().queueForSend(c, entityplayer)) {
                         buff.loadedChunks++;
                     }
+                } else {
+                    System.out.println("Discarding chunk (" + ccip.x + "/" + ccip.z + ") S: " + buff.getPlayerChunkSendQueue().isOnServer(ccip) + " AL: " + buff.getPlayerChunkSendQueue().alreadyLoaded(ccip));
                 }
                 buff.remove(ccip);
             }
@@ -171,7 +173,7 @@ public class PlayerChunkManager {
                         Chunk chunk = this.world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z);
                         if(chunk.k()) {
                             chunkData.addChunk(chunk);
-                            chunkQueue.removeFirst(); // Poweruser
+                            chunkQueue.removeFirst(true); // Poweruser
                         }
                         // CraftBukkit end
                         else {
@@ -183,7 +185,7 @@ public class PlayerChunkManager {
                         skipped++;
                     }
                 } else {
-                    chunkQueue.removeFirst();
+                    chunkQueue.removeFirst(false);
                 }
             }
             if (!chunkData.isEmpty()) {
