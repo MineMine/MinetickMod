@@ -61,11 +61,11 @@ public class PBJobPlayOutMapChunk implements PacketBuilderJobInterface {
             this.chunkQueues = null;
         } else {
             if(this.chunkQueue != null &&  this.connection != null) {
-                //if(!this.chunkQueue.isOnServer(chunk.locX, chunk.locZ)) {
+                if(!this.chunkQueue.isOnServer(chunk.locX, chunk.locZ)) {
                     packetSent = true;
                     packet.setPendingUses(1);
                     this.connection.sendPacket(packet);
-                //}
+                }
             }
             this.connection = null;
             this.chunkQueue = null;
