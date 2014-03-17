@@ -235,8 +235,7 @@ public class PlayerChunk { // Poweruser
         return playerchunk.location;
     }
 
-    //static List b(PlayerChunk playerchunk) {
-    public static List b(PlayerChunk playerchunk) { // Poweruser
+    static List b(PlayerChunk playerchunk) {
         return playerchunk.b;
     }
 }
