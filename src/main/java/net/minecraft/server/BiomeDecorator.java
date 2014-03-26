@@ -109,7 +109,6 @@ public class BiomeDecorator {
     public void a(World world, Random random, BiomeBase biomebase, int i, int j) {
         if (this.a != null) {
             // Poweruser start
-            System.out.println("Creating Decorator " + world.getWorld().getName() + "(" + biomebase.af);
             BiomeDecorator decorator = new BiomeDecorator(this);
             decorator.a = world;
             decorator.b = random;
