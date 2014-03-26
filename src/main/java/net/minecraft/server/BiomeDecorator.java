@@ -65,12 +65,9 @@ public class BiomeDecorator {
         this.F = 3;
         this.G = 1;
         this.I = true;
-        this.alternativeDecorators = new ConcurrentLinkedQueue<BiomeDecorator>();
     }
 
     // Poweruser start
-    private ConcurrentLinkedQueue<BiomeDecorator> alternativeDecorators;
-
     private BiomeDecorator(BiomeDecorator decorator) {
         this.f = decorator.f;
         this.g = decorator.g;
@@ -112,24 +109,15 @@ public class BiomeDecorator {
     public void a(World world, Random random, BiomeBase biomebase, int i, int j) {
         if (this.a != null) {
             // Poweruser start
-            if(this.alternativeDecorators != null) {
-                BiomeDecorator decorator;
-                if(!this.alternativeDecorators.isEmpty()) {
-                    decorator = this.alternativeDecorators.poll();
-                } else {
-                    decorator = new BiomeDecorator(this);
-                }
-                decorator.a = world;
-                decorator.b = random;
-                decorator.c = i;
-                decorator.d = j;
-                decorator.a(biomebase);
-                decorator.a = null;
-                decorator.b = null;
-                this.alternativeDecorators.offer(decorator);
-            } else {
-                throw new IllegalStateException("Alternative BiomeDecorators are not allowed to create copies of themselves");
-            }
+            System.out.println("Creating Decorator " + world.getWorld().getName() + "(" + biomebase.af);
+            BiomeDecorator decorator = new BiomeDecorator(this);
+            decorator.a = world;
+            decorator.b = random;
+            decorator.c = i;
+            decorator.d = j;
+            decorator.a(biomebase);
+            decorator.a = null;
+            decorator.b = null;
             //throw new RuntimeException("Already decorating!!");
             // Poweruser end
         } else {
