@@ -263,8 +263,7 @@ public class BiomeMesa extends BiomeBase {
     }
 
     protected BiomeBase k() {
-        //boolean flag = this.id == BiomeBase.MESA.id;
-        boolean flag = this.id == BiomeIDEnum.MESA.id; // Poweruser
+        boolean flag = this.id == BiomeBase.MESA.id;
         BiomeMesa biomemesa = new BiomeMesa(this.id + 128, flag, this.aI);
 
         if (!flag) {

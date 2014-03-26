@@ -30,11 +30,7 @@ public class BlockBed extends BlockDirectional {
                 i1 = world.getData(i, j, k);
             }
 
-            //if (world.worldProvider.e() && world.getBiome(i, k) != BiomeBase.HELL) {
-            // Poweruser start
-            BiomeBaseObject biomeBaseObj = world.getWorldChunkManager().getBiomeBaseObject();
-            if (world.worldProvider.e() && !world.getBiome(i, k).equals(biomeBaseObj.HELL)) {
-            // Poweruser end
+            if (world.worldProvider.e() && world.getBiome(i, k) != BiomeBase.HELL) {
                 if (c(i1)) {
                     EntityHuman entityhuman1 = null;
                     Iterator iterator = world.players.iterator();

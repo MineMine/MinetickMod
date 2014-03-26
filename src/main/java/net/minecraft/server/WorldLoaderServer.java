@@ -66,20 +66,14 @@ public class WorldLoaderServer extends WorldLoader {
         Object object = null;
 
         if (worlddata.getType() == WorldType.FLAT) {
-            //object = new WorldChunkManagerHell(BiomeBase.PLAINS, 0.5F);
-            // Poweruser start - initializing with the biome id, the biome object within is set,
-            // once the worlds chunkmanager is created and accessible
-            object = new WorldChunkManagerHell(BiomeIDEnum.PLAINS.id, 0.5F);
-            // Poweruser end
+            object = new WorldChunkManagerHell(BiomeBase.PLAINS, 0.5F);
         } else {
             object = new WorldChunkManager(worlddata.getSeed(), worlddata.getType());
         }
 
         this.a(new File(file1, "region"), (Iterable) arraylist, (WorldChunkManager) object, 0, i, iprogressupdate);
-        //this.a(new File(file2, "region"), (Iterable) arraylist1, new WorldChunkManagerHell(BiomeBase.HELL, 0.0F), arraylist.size(), i, iprogressupdate);
-        this.a(new File(file2, "region"), (Iterable) arraylist1, new WorldChunkManagerHell(BiomeIDEnum.HELL.id, 0.0F), arraylist.size(), i, iprogressupdate); // Poweruser
-        //this.a(new File(file3, "region"), (Iterable) arraylist2, new WorldChunkManagerHell(BiomeBase.SKY, 0.0F), arraylist.size() + arraylist1.size(), i, iprogressupdate);
-        this.a(new File(file3, "region"), (Iterable) arraylist2, new WorldChunkManagerHell(BiomeIDEnum.SKY.id, 0.0F), arraylist.size() + arraylist1.size(), i, iprogressupdate); // Poweruser
+        this.a(new File(file2, "region"), (Iterable) arraylist1, new WorldChunkManagerHell(BiomeBase.HELL, 0.0F), arraylist.size(), i, iprogressupdate);
+        this.a(new File(file3, "region"), (Iterable) arraylist2, new WorldChunkManagerHell(BiomeBase.SKY, 0.0F), arraylist.size() + arraylist1.size(), i, iprogressupdate);
         worlddata.e(19133);
         if (worlddata.getType() == WorldType.NORMAL_1_1) {
             worlddata.setType(WorldType.NORMAL);

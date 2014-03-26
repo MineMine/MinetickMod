@@ -192,8 +192,7 @@ public class WorldGenFlatInfo {
                 if (list != null && !list.isEmpty()) {
                     worldgenflatinfo.c().addAll(list);
                     worldgenflatinfo.d();
-                    //int k = BiomeBase.PLAINS.id;
-                    int k = BiomeIDEnum.PLAINS.id; // Poweruser
+                    int k = BiomeBase.PLAINS.id;
 
                     if (i > 0 && astring.length > j) {
                         k = MathHelper.a(astring[j++], k);
@@ -242,8 +241,7 @@ public class WorldGenFlatInfo {
     public static WorldGenFlatInfo e() {
         WorldGenFlatInfo worldgenflatinfo = new WorldGenFlatInfo();
 
-        //worldgenflatinfo.a(BiomeBase.PLAINS.id);
-        worldgenflatinfo.a(BiomeIDEnum.PLAINS.id); // Poweruser
+        worldgenflatinfo.a(BiomeBase.PLAINS.id);
         worldgenflatinfo.c().add(new WorldGenFlatLayerInfo(1, Blocks.BEDROCK));
         worldgenflatinfo.c().add(new WorldGenFlatLayerInfo(2, Blocks.DIRT));
         worldgenflatinfo.c().add(new WorldGenFlatLayerInfo(1, Blocks.GRASS));

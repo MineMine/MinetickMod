@@ -54,7 +54,6 @@ public class GenLayerZoom extends GenLayer {
         for (int k = 0; k < j; ++k) {
             object = new GenLayerZoom(i + (long) k, (GenLayer) object);
             object.setIntCache(genlayer.intCache); // Poweruser
-            object.setBiomeBaseObject(genlayer.biomeBaseObj); // Poweruser
         }
 
         return (GenLayer) object;

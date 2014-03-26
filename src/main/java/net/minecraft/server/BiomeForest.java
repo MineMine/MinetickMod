@@ -139,8 +139,7 @@ public class BiomeForest extends BiomeBase {
     }
 
     protected BiomeBase k() {
-        //if (this.id == BiomeBase.FOREST.id) {
-        if (this.id == BiomeIDEnum.FOREST.id) { // Poweruser
+        if (this.id == BiomeBase.FOREST.id) {
             BiomeForest biomeforest = new BiomeForest(this.id + 128, 1);
 
             biomeforest.a(new BiomeTemperature(this.am, this.an + 0.2F));
@@ -149,8 +148,7 @@ public class BiomeForest extends BiomeBase {
             biomeforest.a(8233509);
             return biomeforest;
         } else {
-            //return (BiomeBase) (this.id != BiomeBase.BIRCH_FOREST.id && this.id != BiomeBase.BIRCH_FOREST_HILLS.id ? new BiomeBaseSubForest2(this, this.id + 128, this) : new BiomeBaseSubForest(this, this.id + 128, this));
-            return (BiomeBase) (this.id != BiomeIDEnum.BIRCH_FOREST.id && this.id != BiomeIDEnum.BIRCH_FOREST_HILLS.id ? new BiomeBaseSubForest2(this, this.id + 128, this) : new BiomeBaseSubForest(this, this.id + 128, this)); // Poweruser
+            return (BiomeBase) (this.id != BiomeBase.BIRCH_FOREST.id && this.id != BiomeBase.BIRCH_FOREST_HILLS.id ? new BiomeBaseSubForest2(this, this.id + 128, this) : new BiomeBaseSubForest(this, this.id + 128, this));
         }
     }
 }

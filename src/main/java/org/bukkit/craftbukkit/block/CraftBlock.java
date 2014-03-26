@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.server.BiomeBase;
-import net.minecraft.server.BiomeBaseObject;
-import net.minecraft.server.BiomeIDEnum;
 import net.minecraft.server.BlockCocoa;
 import net.minecraft.server.BlockRedstoneWire;
 import net.minecraft.server.Blocks;
@@ -40,7 +38,6 @@ public class CraftBlock implements Block {
     private final int z;
     private static final Biome BIOME_MAPPING[];
     private static final BiomeBase BIOMEBASE_MAPPING[];
-    private static BiomeBaseObject biomebaseObj = new BiomeBaseObject(); // Poweruser
 
     public CraftBlock(CraftChunk chunk, int x, int y, int z) {
         this.x = x;
@@ -459,7 +456,6 @@ public class CraftBlock implements Block {
     static {
         BIOME_MAPPING = new Biome[BiomeBase.n().length];
         BIOMEBASE_MAPPING = new BiomeBase[Biome.values().length];
-        /*
         BIOME_MAPPING[BiomeBase.OCEAN.id] = Biome.OCEAN;
         BIOME_MAPPING[BiomeBase.PLAINS.id] = Biome.PLAINS;
         BIOME_MAPPING[BiomeBase.DESERT.id] = Biome.DESERT;
@@ -523,83 +519,15 @@ public class CraftBlock implements Block {
         BIOME_MAPPING[BiomeBase.EXTREME_HILLS.id + 128] = Biome.EXTREME_HILLS_MOUNTAINS;
         BIOME_MAPPING[BiomeBase.EXTREME_HILLS_PLUS.id + 128] = Biome.EXTREME_HILLS_PLUS_MOUNTAINS;
         BIOME_MAPPING[BiomeBase.MEGA_TAIGA_HILLS.id + 128] = Biome.MEGA_SPRUCE_TAIGA_HILLS;
-        */
-        // Poweruser start
-        BIOME_MAPPING[BiomeIDEnum.OCEAN.id] = Biome.OCEAN;
-        BIOME_MAPPING[BiomeIDEnum.PLAINS.id] = Biome.PLAINS;
-        BIOME_MAPPING[BiomeIDEnum.DESERT.id] = Biome.DESERT;
-        BIOME_MAPPING[BiomeIDEnum.EXTREME_HILLS.id] = Biome.EXTREME_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.FOREST.id] = Biome.FOREST;
-        BIOME_MAPPING[BiomeIDEnum.TAIGA.id] = Biome.TAIGA;
-        BIOME_MAPPING[BiomeIDEnum.SWAMPLAND.id] = Biome.SWAMPLAND;
-        BIOME_MAPPING[BiomeIDEnum.RIVER.id] = Biome.RIVER;
-        BIOME_MAPPING[BiomeIDEnum.HELL.id] = Biome.HELL;
-        BIOME_MAPPING[BiomeIDEnum.SKY.id] = Biome.SKY;
-        BIOME_MAPPING[BiomeIDEnum.FROZEN_OCEAN.id] = Biome.FROZEN_OCEAN;
-        BIOME_MAPPING[BiomeIDEnum.FROZEN_RIVER.id] = Biome.FROZEN_RIVER;
-        BIOME_MAPPING[BiomeIDEnum.ICE_PLAINS.id] = Biome.ICE_PLAINS;
-        BIOME_MAPPING[BiomeIDEnum.ICE_MOUNTAINS.id] = Biome.ICE_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.MUSHROOM_ISLAND.id] = Biome.MUSHROOM_ISLAND;
-        BIOME_MAPPING[BiomeIDEnum.MUSHROOM_SHORE.id] = Biome.MUSHROOM_SHORE;
-        BIOME_MAPPING[BiomeIDEnum.BEACH.id] = Biome.BEACH;
-        BIOME_MAPPING[BiomeIDEnum.DESERT_HILLS.id] = Biome.DESERT_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.FOREST_HILLS.id] = Biome.FOREST_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.TAIGA_HILLS.id] = Biome.TAIGA_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.SMALL_MOUNTAINS.id] = Biome.SMALL_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.JUNGLE.id] = Biome.JUNGLE;
-        BIOME_MAPPING[BiomeIDEnum.JUNGLE_HILLS.id] = Biome.JUNGLE_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.JUNGLE_EDGE.id] = Biome.JUNGLE_EDGE;
-        BIOME_MAPPING[BiomeIDEnum.DEEP_OCEAN.id] = Biome.DEEP_OCEAN;
-        BIOME_MAPPING[BiomeIDEnum.STONE_BEACH.id] = Biome.STONE_BEACH;
-        BIOME_MAPPING[BiomeIDEnum.COLD_BEACH.id] = Biome.COLD_BEACH;
-        BIOME_MAPPING[BiomeIDEnum.BIRCH_FOREST.id] = Biome.BIRCH_FOREST;
-        BIOME_MAPPING[BiomeIDEnum.BIRCH_FOREST_HILLS.id] = Biome.BIRCH_FOREST_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.ROOFED_FOREST.id] = Biome.ROOFED_FOREST;
-        BIOME_MAPPING[BiomeIDEnum.COLD_TAIGA.id] = Biome.COLD_TAIGA;
-        BIOME_MAPPING[BiomeIDEnum.COLD_TAIGA_HILLS.id] = Biome.COLD_TAIGA_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.MEGA_TAIGA.id] = Biome.MEGA_TAIGA;
-        BIOME_MAPPING[BiomeIDEnum.MEGA_TAIGA_HILLS.id] = Biome.MEGA_TAIGA_HILLS;
-        BIOME_MAPPING[BiomeIDEnum.EXTREME_HILLS_PLUS.id] = Biome.EXTREME_HILLS_PLUS;
-        BIOME_MAPPING[BiomeIDEnum.SAVANNA.id] = Biome.SAVANNA;
-        BIOME_MAPPING[BiomeIDEnum.SAVANNA_PLATEAU.id] = Biome.SAVANNA_PLATEAU;
-        BIOME_MAPPING[BiomeIDEnum.MESA.id] = Biome.MESA;
-        BIOME_MAPPING[BiomeIDEnum.MESA_PLATEAU_F.id] = Biome.MESA_PLATEAU_FOREST;
-        BIOME_MAPPING[BiomeIDEnum.MESA_PLATEAU.id] = Biome.MESA_PLATEAU;
 
-        // Extended Biomes
-        BIOME_MAPPING[BiomeIDEnum.PLAINS.id + 128] = Biome.SUNFLOWER_PLAINS;
-        BIOME_MAPPING[BiomeIDEnum.DESERT.id + 128] = Biome.DESERT_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.FOREST.id + 128] = Biome.FLOWER_FOREST;
-        BIOME_MAPPING[BiomeIDEnum.TAIGA.id + 128] = Biome.TAIGA_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.SWAMPLAND.id + 128] = Biome.SWAMPLAND_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.ICE_PLAINS.id + 128] = Biome.ICE_PLAINS_SPIKES;
-        BIOME_MAPPING[BiomeIDEnum.JUNGLE.id + 128] = Biome.JUNGLE_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.JUNGLE_EDGE.id + 128] = Biome.JUNGLE_EDGE_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.COLD_TAIGA.id + 128] = Biome.COLD_TAIGA_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.SAVANNA.id + 128] = Biome.SAVANNA_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.SAVANNA_PLATEAU.id + 128] = Biome.SAVANNA_PLATEAU_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.MESA.id + 128] = Biome.MESA_BRYCE;
-        BIOME_MAPPING[BiomeIDEnum.MESA_PLATEAU_F.id + 128] = Biome.MESA_PLATEAU_FOREST_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.MESA_PLATEAU.id + 128] = Biome.MESA_PLATEAU_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.BIRCH_FOREST.id + 128] = Biome.BIRCH_FOREST_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.BIRCH_FOREST_HILLS.id + 128] = Biome.BIRCH_FOREST_HILLS_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.ROOFED_FOREST.id + 128] = Biome.ROOFED_FOREST_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.MEGA_TAIGA.id + 128] = Biome.MEGA_SPRUCE_TAIGA;
-        BIOME_MAPPING[BiomeIDEnum.EXTREME_HILLS.id + 128] = Biome.EXTREME_HILLS_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.EXTREME_HILLS_PLUS.id + 128] = Biome.EXTREME_HILLS_PLUS_MOUNTAINS;
-        BIOME_MAPPING[BiomeIDEnum.MEGA_TAIGA_HILLS.id + 128] = Biome.MEGA_SPRUCE_TAIGA_HILLS;
-        // Poweruser end
         /* Sanity check - we should have a record for each record in the BiomeBase.a table */
         /* Helps avoid missed biomes when we upgrade bukkit to new code with new biomes */
         for (int i = 0; i < BIOME_MAPPING.length; i++) {
-            //if ((BiomeBase.getBiome(i) != null) && (BIOME_MAPPING[i] == null)) {
-            if ((biomebaseObj.getBiome(i) != null) && (BIOME_MAPPING[i] == null)) { // Poweruser
-                //throw new IllegalArgumentException("Missing Biome mapping for BiomeBase[" + i + ", " + BiomeBase.getBiome(i) + "]");
-                throw new IllegalArgumentException("Missing Biome mapping for BiomeBase[" + i + ", " + biomebaseObj.getBiome(i) + "]"); // Poweruser
+            if ((BiomeBase.getBiome(i) != null) && (BIOME_MAPPING[i] == null)) {
+                throw new IllegalArgumentException("Missing Biome mapping for BiomeBase[" + i + ", " + BiomeBase.getBiome(i) + "]");
             }
             if (BIOME_MAPPING[i] != null) {  /* Build reverse mapping for setBiome */
-                //BIOMEBASE_MAPPING[BIOME_MAPPING[i].ordinal()] = BiomeBase.getBiome(i);
-                BIOMEBASE_MAPPING[BIOME_MAPPING[i].ordinal()] = biomebaseObj.getBiome(i); // Poweruser
+                BIOMEBASE_MAPPING[BIOME_MAPPING[i].ordinal()] = BiomeBase.getBiome(i);
             }
         }
     }

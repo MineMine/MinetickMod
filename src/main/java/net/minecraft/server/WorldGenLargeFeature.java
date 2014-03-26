@@ -10,8 +10,7 @@ import java.util.Map.Entry;
 
 public class WorldGenLargeFeature extends StructureGenerator {
 
-    //private static List e = Arrays.asList(new BiomeBase[] { BiomeBase.DESERT, BiomeBase.DESERT_HILLS, BiomeBase.JUNGLE, BiomeBase.JUNGLE_HILLS, BiomeBase.SWAMPLAND});
-    private static List<BiomeIDEnum> e = Arrays.asList(new BiomeIDEnum[] { BiomeIDEnum.DESERT, BiomeIDEnum.DESERT_HILLS, BiomeIDEnum.JUNGLE, BiomeIDEnum.JUNGLE_HILLS, BiomeIDEnum.SWAMPLAND}); // Poweruser
+    private static List e = Arrays.asList(new BiomeBase[] { BiomeBase.DESERT, BiomeBase.DESERT_HILLS, BiomeBase.JUNGLE, BiomeBase.JUNGLE_HILLS, BiomeBase.SWAMPLAND});
     private List f;
     private int g;
     private int h;
@@ -62,7 +61,6 @@ public class WorldGenLargeFeature extends StructureGenerator {
         j1 += random.nextInt(this.g - this.h);
         if (k == i1 && l == j1) {
             BiomeBase biomebase = this.c.getWorldChunkManager().getBiome(k * 16 + 8, l * 16 + 8);
-            /*
             Iterator iterator = e.iterator();
 
             while (iterator.hasNext()) {
@@ -72,18 +70,6 @@ public class WorldGenLargeFeature extends StructureGenerator {
                     return true;
                 }
             }
-            */
-            // Poweruser start
-            Iterator<BiomeIDEnum> iterator = e.iterator();
-
-            while (iterator.hasNext()) {
-                BiomeIDEnum biomeID1 = iterator.next();
-
-                if (biomebase.id == biomeID1.id) {
-                    return true;
-                }
-            }
-            // Poweruser end
         }
 
         return false;

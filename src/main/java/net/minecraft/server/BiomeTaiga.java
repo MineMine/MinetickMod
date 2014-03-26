@@ -82,7 +82,6 @@ public class BiomeTaiga extends BiomeBase {
     }
 
     protected BiomeBase k() {
-        //return this.id == BiomeBase.MEGA_TAIGA.id ? (new BiomeTaiga(this.id + 128, 2)).a(5858897, true).a("Mega Spruce Taiga").a(5159473).a(0.25F, 0.8F).a(new BiomeTemperature(this.am, this.an)) : super.k();
-        return this.id == BiomeIDEnum.MEGA_TAIGA.id ? (new BiomeTaiga(this.id + 128, 2)).a(5858897, true).a("Mega Spruce Taiga").a(5159473).a(0.25F, 0.8F).a(new BiomeTemperature(this.am, this.an)) : super.k(); // Poweruser
+        return this.id == BiomeBase.MEGA_TAIGA.id ? (new BiomeTaiga(this.id + 128, 2)).a(5858897, true).a("Mega Spruce Taiga").a(5159473).a(0.25F, 0.8F).a(new BiomeTemperature(this.am, this.an)) : super.k();
     }
 }

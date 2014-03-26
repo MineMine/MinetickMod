@@ -305,11 +305,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
         int l1;
         int i2;
 
-        //if (biomebase != BiomeBase.DESERT && biomebase != BiomeBase.DESERT_HILLS && !flag && this.i.nextInt(4) == 0) {
-        // Poweruser start
-        BiomeBaseObject biomeBaseObj = this.n.getWorldChunkManager().getBiomeBaseObject();
-        if (!biomebase.equals(biomeBaseObj.DESERT) && !biomebase.equals(biomeBaseObj.DESERT_HILLS) && !flag && this.i.nextInt(4) == 0) {
-        // Poweruser end
+        if (biomebase != BiomeBase.DESERT && biomebase != BiomeBase.DESERT_HILLS && !flag && this.i.nextInt(4) == 0) {
             k1 = k + this.i.nextInt(16) + 8;
             l1 = this.i.nextInt(256);
             i2 = l + this.i.nextInt(16) + 8;

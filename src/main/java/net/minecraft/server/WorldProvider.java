@@ -37,8 +37,7 @@ public abstract class WorldProvider {
         if (this.b.getWorldData().getType() == WorldType.FLAT) {
             WorldGenFlatInfo worldgenflatinfo = WorldGenFlatInfo.a(this.b.getWorldData().getGeneratorOptions());
 
-            //this.e = new WorldChunkManagerHell(BiomeBase.getBiome(worldgenflatinfo.a()), 0.5F);
-            this.e = new WorldChunkManagerHell(worldgenflatinfo.a(), 0.5F); // Poweruser
+            this.e = new WorldChunkManagerHell(BiomeBase.getBiome(worldgenflatinfo.a()), 0.5F);
         } else {
             this.e = new WorldChunkManager(this.b);
         }

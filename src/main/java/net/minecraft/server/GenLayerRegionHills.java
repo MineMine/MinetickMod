@@ -31,8 +31,7 @@ public class GenLayerRegionHills extends GenLayer {
                 }
 
                 if (k1 != 0 && l1 >= 2 && (l1 - 2) % 29 == 1 && k1 < 128) {
-                    //if (BiomeBase.getBiome(k1 + 128) != null) {
-                    if (this.biomeBaseObj.getBiome(k1 + 128) != null) { // Poweruser
+                    if (BiomeBase.getBiome(k1 + 128) != null) {
                         aint2[j1 + i1 * k] = k1 + 128;
                     } else {
                         aint2[j1 + i1 * k] = k1;
@@ -42,7 +41,7 @@ public class GenLayerRegionHills extends GenLayer {
                 } else {
                     int i2 = k1;
                     int j2;
-                    /*
+
                     if (k1 == BiomeBase.DESERT.id) {
                         i2 = BiomeBase.DESERT_HILLS.id;
                     } else if (k1 == BiomeBase.FOREST.id) {
@@ -83,53 +82,9 @@ public class GenLayerRegionHills extends GenLayer {
                             i2 = BiomeBase.FOREST.id;
                         }
                     }
-                    */
-                    // Poweruser start
-                    if (k1 == BiomeIDEnum.DESERT.id) {
-                        i2 = BiomeIDEnum.DESERT_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.FOREST.id) {
-                        i2 = BiomeIDEnum.FOREST_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.BIRCH_FOREST.id) {
-                        i2 = BiomeIDEnum.BIRCH_FOREST_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.ROOFED_FOREST.id) {
-                        i2 = BiomeIDEnum.PLAINS.id;
-                    } else if (k1 == BiomeIDEnum.TAIGA.id) {
-                        i2 = BiomeIDEnum.TAIGA_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.MEGA_TAIGA.id) {
-                        i2 = BiomeIDEnum.MEGA_TAIGA_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.COLD_TAIGA.id) {
-                        i2 = BiomeIDEnum.COLD_TAIGA_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.PLAINS.id) {
-                        if (this.a(3) == 0) {
-                            i2 = BiomeIDEnum.FOREST_HILLS.id;
-                        } else {
-                            i2 = BiomeIDEnum.FOREST.id;
-                        }
-                    } else if (k1 == BiomeIDEnum.ICE_PLAINS.id) {
-                        i2 = BiomeIDEnum.ICE_MOUNTAINS.id;
-                    } else if (k1 == BiomeIDEnum.JUNGLE.id) {
-                        i2 = BiomeIDEnum.JUNGLE_HILLS.id;
-                    } else if (k1 == BiomeIDEnum.OCEAN.id) {
-                        i2 = BiomeIDEnum.DEEP_OCEAN.id;
-                    } else if (k1 == BiomeIDEnum.EXTREME_HILLS.id) {
-                        i2 = BiomeIDEnum.EXTREME_HILLS_PLUS.id;
-                    } else if (k1 == BiomeIDEnum.SAVANNA.id) {
-                        i2 = BiomeIDEnum.SAVANNA_PLATEAU.id;
-                    } else if (a(k1, BiomeIDEnum.MESA_PLATEAU_F.id)) {
-                        i2 = BiomeIDEnum.MESA.id;
-                    } else if (k1 == BiomeIDEnum.DEEP_OCEAN.id && this.a(3) == 0) {
-                        j2 = this.a(2);
-                        if (j2 == 0) {
-                            i2 = BiomeIDEnum.PLAINS.id;
-                        } else {
-                            i2 = BiomeIDEnum.FOREST.id;
-                        }
-                    }
-                    // Poweruser end
 
                     if (flag && i2 != k1) {
-                        //if (BiomeBase.getBiome(i2 + 128) != null) {
-                        if (this.biomeBaseObj.getBiome(i2 + 128) != null) { // Poweruser
+                        if (BiomeBase.getBiome(i2 + 128) != null) {
                             i2 += 128;
                         } else {
                             i2 = k1;

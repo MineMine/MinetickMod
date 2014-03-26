@@ -5,8 +5,7 @@ public class WorldProviderTheEnd extends WorldProvider {
     public WorldProviderTheEnd() {}
 
     public void b() {
-        //this.e = new WorldChunkManagerHell(BiomeBase.SKY, 0.0F);
-        this.e = new WorldChunkManagerHell(BiomeIDEnum.SKY.id, 0.0F); // Poweruser
+        this.e = new WorldChunkManagerHell(BiomeBase.SKY, 0.0F);
         this.dimension = 1;
         this.g = true;
     }

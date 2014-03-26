@@ -10,13 +10,8 @@ public class WorldGenLargeFeatureStart extends StructureStart {
         super(i, j);
         BiomeBase biomebase = world.getBiome(i * 16 + 8, j * 16 + 8);
 
-        //if (biomebase != BiomeBase.JUNGLE && biomebase != BiomeBase.JUNGLE_HILLS) {
-            //if (biomebase == BiomeBase.SWAMPLAND) {
-        // Poweruser start
-        BiomeBaseObject biomeBaseObj = world.getWorldChunkManager().getBiomeBaseObject();
-        if (!biomebase.equals(biomeBaseObj.JUNGLE) && !biomebase.equals(biomeBaseObj.JUNGLE_HILLS)) {
-            if (biomebase.equals(biomeBaseObj.SWAMPLAND)) {
-        // Poweruser end
+        if (biomebase != BiomeBase.JUNGLE && biomebase != BiomeBase.JUNGLE_HILLS) {
+            if (biomebase == BiomeBase.SWAMPLAND) {
                 WorldGenWitchHut worldgenwitchhut = new WorldGenWitchHut(random, i * 16, j * 16);
 
                 this.a.add(worldgenwitchhut);

@@ -26,10 +26,7 @@ public abstract class BiomeBase {
     protected static final BiomeTemperature l = new BiomeTemperature(0.2F, 0.3F);
     protected static final BiomeTemperature m = new BiomeTemperature(-0.2F, 0.1F);
     private static final BiomeBase[] biomes = new BiomeBase[256];
-    private static boolean initDone = false; // Poweruser
     public static final Set n = Sets.newHashSet();
-    // Poweruser - moved to class BiomeBaseObject
-    /*
     public static final BiomeBase OCEAN = (new BiomeOcean(0)).b(112).a("Ocean").a(c);
     public static final BiomeBase PLAINS = (new BiomePlains(1)).b(9286496).a("Plains");
     public static final BiomeBase DESERT = (new BiomeDesert(2)).b(16421912).a("Desert").b().a(2.0F, 0.0F).a(e);
@@ -70,7 +67,6 @@ public abstract class BiomeBase {
     public static final BiomeBase MESA = (new BiomeMesa(37, false, false)).b(14238997).a("Mesa");
     public static final BiomeBase MESA_PLATEAU_F = (new BiomeMesa(38, false, true)).b(11573093).a("Mesa Plateau F").a(h);
     public static final BiomeBase MESA_PLATEAU = (new BiomeMesa(39, false, false)).b(13274213).a("Mesa Plateau").a(h);
-    */
     protected static final NoiseGenerator3 ac;
     protected static final NoiseGenerator3 ad;
     protected static final WorldGenTallPlant ae;
@@ -117,7 +113,7 @@ public abstract class BiomeBase {
         this.aA = new WorldGenBigTree(false);
         this.aB = new WorldGenSwampTree();
         this.id = i;
-        //biomes[i] = this;
+        biomes[i] = this;
         this.ar = this.a();
         this.at.add(new BiomeMeta(EntitySheep.class, 12, 4, 4));
         this.at.add(new BiomeMeta(EntityPig.class, 10, 4, 4));
@@ -331,8 +327,7 @@ public abstract class BiomeBase {
     }
 
     public boolean a(BiomeBase biomebase) {
-        //return biomebase == this ? true : (biomebase == null ? false : this.l() == biomebase.l());
-        return biomebase.equals(this) ? true : (biomebase == null ? false : this.l() == biomebase.l()); // Poweruser
+        return biomebase == this ? true : (biomebase == null ? false : this.l() == biomebase.l());
     }
 
     public EnumTemperature m() {
@@ -348,14 +343,11 @@ public abstract class BiomeBase {
             return biomes[i];
         } else {
             aC.warn("Biome ID is out of bounds: " + i + ", defaulting to 0 (Ocean)");
-            //return OCEAN;
-            return biomes[0]; // Poweruser
+            return OCEAN;
         }
     }
 
     static {
-// Poweruser - k() calls moved to BiomeBase.initBiomeBaseObject(...), building of n moved to BiomeBaseObject constructor
-/*
         PLAINS.k();
         DESERT.k();
         FOREST.k();
@@ -390,43 +382,8 @@ public abstract class BiomeBase {
 
         n.remove(HELL);
         n.remove(SKY);
-*/
         ac = new NoiseGenerator3(new Random(1234L), 1);
         ad = new NoiseGenerator3(new Random(2345L), 1);
         ae = new WorldGenTallPlant();
     }
-
-    // Poweruser start
-    /*
-     * Comparing the BiomeBase objects by object reference with == doesn't work anymore,
-     * as every world and some other parts of the code, like the structure generator,
-     * have their own now. Instead they're compared by their id.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof BiomeBase) {
-            return ((BiomeBase) o).id == this.id;
-        } else {
-            return false;
-        }
-    }
-
-    public BiomeBase initBiomeBaseObject(BiomeBaseObject obj, boolean runK) {
-        obj.biomes[this.id] = this;
-        if(runK) {
-            obj.biomes[this.id + 128] = this.k();
-        }
-        return this;
-    }
-
-    public static void initStaticFields(BiomeBase[] array, Set set) {
-        if(!initDone) {
-            initDone = true;
-            for(int i = 0; i < array.length; i++) {
-                biomes[i] = array[i];
-            }
-            n.addAll(set);
-        }
-    }
-    // Poweruser end
 }
