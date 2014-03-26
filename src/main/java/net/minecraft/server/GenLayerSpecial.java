@@ -30,7 +30,7 @@ public class GenLayerSpecial extends GenLayer {
         int k1 = 1 + k + 1;
         int l1 = 1 + l + 1;
         int[] aint = this.a.a(i1, j1, k1, l1);
-        int[] aint1 = this.intCache.a(k * l); // Poweruser
+        int[] aint1 = IntCache.a(k * l);
 
         for (int i2 = 0; i2 < l; ++i2) {
             for (int j2 = 0; j2 < k; ++j2) {
@@ -63,7 +63,7 @@ public class GenLayerSpecial extends GenLayer {
         int k1 = 1 + k + 1;
         int l1 = 1 + l + 1;
         int[] aint = this.a.a(i1, j1, k1, l1);
-        int[] aint1 = this.intCache.a(k * l); // Poweruser
+        int[] aint1 = IntCache.a(k * l);
 
         for (int i2 = 0; i2 < l; ++i2) {
             for (int j2 = 0; j2 < k; ++j2) {
@@ -91,7 +91,7 @@ public class GenLayerSpecial extends GenLayer {
 
     private int[] e(int i, int j, int k, int l) {
         int[] aint = this.a.a(i, j, k, l);
-        int[] aint1 = this.intCache.a(k * l); // Poweruser
+        int[] aint1 = IntCache.a(k * l);
 
         for (int i1 = 0; i1 < l; ++i1) {
             for (int j1 = 0; j1 < k; ++j1) {

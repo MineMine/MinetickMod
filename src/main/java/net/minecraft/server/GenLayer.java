@@ -9,57 +9,30 @@ public abstract class GenLayer {
     private long d;
     protected long b;
 
-    // Poweruser start
-    protected IntCache intCache;
-    public void setIntCache(IntCache intCache) {
-        this.intCache = intCache;
-    }
-    // Poweruser end
-
-    //public static GenLayer[] a(long i, WorldType worldtype) {
-    public static GenLayer[] a(long i, WorldType worldtype, IntCache intCache) { // Poweruser
+    public static GenLayer[] a(long i, WorldType worldtype) {
         boolean flag = false;
         LayerIsland layerisland = new LayerIsland(1L);
-        layerisland.setIntCache(intCache); // Poweruser
         GenLayerZoomFuzzy genlayerzoomfuzzy = new GenLayerZoomFuzzy(2000L, layerisland);
-        genlayerzoomfuzzy.setIntCache(intCache); // Poweruser
         GenLayerIsland genlayerisland = new GenLayerIsland(1L, genlayerzoomfuzzy);
-        genlayerisland.setIntCache(intCache); // Poweruser
         GenLayerZoom genlayerzoom = new GenLayerZoom(2001L, genlayerisland);
-        genlayerzoom.setIntCache(intCache); // Poweruser
 
         genlayerisland = new GenLayerIsland(2L, genlayerzoom);
-        genlayerisland.setIntCache(intCache); // Poweruser
         genlayerisland = new GenLayerIsland(50L, genlayerisland);
-        genlayerisland.setIntCache(intCache); // Poweruser
         genlayerisland = new GenLayerIsland(70L, genlayerisland);
-        genlayerisland.setIntCache(intCache); // Poweruser
         GenLayerIcePlains genlayericeplains = new GenLayerIcePlains(2L, genlayerisland);
-        genlayericeplains.setIntCache(intCache); // Poweruser
         GenLayerTopSoil genlayertopsoil = new GenLayerTopSoil(2L, genlayericeplains);
-        genlayertopsoil.setIntCache(intCache); // PoweruserS
 
         genlayerisland = new GenLayerIsland(3L, genlayertopsoil);
-        genlayerisland.setIntCache(intCache); // Poweruser
         GenLayerSpecial genlayerspecial = new GenLayerSpecial(2L, genlayerisland, EnumGenLayerSpecial.COOL_WARM);
-        genlayerspecial.setIntCache(intCache); // Poweruser
 
         genlayerspecial = new GenLayerSpecial(2L, genlayerspecial, EnumGenLayerSpecial.HEAT_ICE);
-        genlayerspecial.setIntCache(intCache); // Poweruser
         genlayerspecial = new GenLayerSpecial(3L, genlayerspecial, EnumGenLayerSpecial.PUFFERFISH);
-        genlayerspecial.setIntCache(intCache); // Poweruser
         genlayerzoom = new GenLayerZoom(2002L, genlayerspecial);
-        genlayerzoom.setIntCache(intCache); // Poweruser
         genlayerzoom = new GenLayerZoom(2003L, genlayerzoom);
-        genlayerzoom.setIntCache(intCache); // Poweruser
         genlayerisland = new GenLayerIsland(4L, genlayerzoom);
-        genlayerisland.setIntCache(intCache); // Poweruser
         GenLayerMushroomIsland genlayermushroomisland = new GenLayerMushroomIsland(5L, genlayerisland);
-        genlayermushroomisland.setIntCache(intCache); // Poweruser
         GenLayerDeepOcean genlayerdeepocean = new GenLayerDeepOcean(4L, genlayermushroomisland);
-        genlayerdeepocean.setIntCache(intCache); // Poweruser
         GenLayer genlayer = GenLayerZoom.b(1000L, genlayerdeepocean, 0);
-        genlayer.setIntCache(intCache); // Poweruser
         byte b0 = 4;
 
         if (worldtype == WorldType.LARGE_BIOMES) {
@@ -71,58 +44,39 @@ public abstract class GenLayer {
         }
 
         GenLayer genlayer1 = GenLayerZoom.b(1000L, genlayer, 0);
-        genlayer1.setIntCache(intCache); // Poweruser
         GenLayerCleaner genlayercleaner = new GenLayerCleaner(100L, genlayer1);
-        genlayercleaner.setIntCache(intCache); // Poweruser
-        //Object object = new GenLayerBiome(200L, genlayer, worldtype);
-        GenLayer object = new GenLayerBiome(200L, genlayer, worldtype); // Poweruser
-        object.setIntCache(intCache); // Poweruser
+        Object object = new GenLayerBiome(200L, genlayer, worldtype);
 
         if (!flag) {
             GenLayer genlayer2 = GenLayerZoom.b(1000L, (GenLayer) object, 2);
-            genlayer2.setIntCache(intCache); // Poweruser
 
             object = new GenLayerDesert(1000L, genlayer2);
-            object.setIntCache(intCache); // Poweruser
         }
 
         GenLayer genlayer3 = GenLayerZoom.b(1000L, genlayercleaner, 2);
-        genlayer3.setIntCache(intCache); // Poweruser
         GenLayerRegionHills genlayerregionhills = new GenLayerRegionHills(1000L, (GenLayer) object, genlayer3);
-        genlayerregionhills.setIntCache(intCache); // Poweruser
 
         genlayer1 = GenLayerZoom.b(1000L, genlayercleaner, 2);
-        genlayer1.setIntCache(intCache); // Poweruser
         genlayer1 = GenLayerZoom.b(1000L, genlayer1, b0);
-        genlayer1.setIntCache(intCache); // Poweruser
         GenLayerRiver genlayerriver = new GenLayerRiver(1L, genlayer1);
-        genlayerriver.setIntCache(intCache); // Poweruser
         GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
-        genlayersmooth.setIntCache(intCache); // Poweruser
 
         object = new GenLayerPlains(1001L, genlayerregionhills);
-        object.setIntCache(intCache); // Poweruser
 
         for (int j = 0; j < b0; ++j) {
             object = new GenLayerZoom((long) (1000 + j), (GenLayer) object);
-            object.setIntCache(intCache); // Poweruser
             if (j == 0) {
                 object = new GenLayerIsland(3L, (GenLayer) object);
-                object.setIntCache(intCache); // Poweruser
             }
 
             if (j == 1) {
                 object = new GenLayerMushroomShore(1000L, (GenLayer) object);
-                object.setIntCache(intCache); // Poweruser
             }
         }
 
         GenLayerSmooth genlayersmooth1 = new GenLayerSmooth(1000L, (GenLayer) object);
-        genlayersmooth1.setIntCache(intCache); // Poweruser
         GenLayerRiverMix genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
-        genlayerrivermix.setIntCache(intCache); // Poweruser
         GenLayerZoomVoronoi genlayerzoomvoronoi = new GenLayerZoomVoronoi(10L, genlayerrivermix);
-        genlayerzoomvoronoi.setIntCache(intCache); // Poweruser
 
         genlayerrivermix.a(i);
         genlayerzoomvoronoi.a(i);

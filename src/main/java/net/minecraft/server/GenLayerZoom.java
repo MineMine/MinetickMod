@@ -15,7 +15,7 @@ public class GenLayerZoom extends GenLayer {
         int[] aint = this.a.a(i1, j1, k1, l1);
         int i2 = k1 - 1 << 1;
         int j2 = l1 - 1 << 1;
-        int[] aint1 = this.intCache.a(i2 * j2); // Poweruser
+        int[] aint1 = IntCache.a(i2 * j2);
 
         int k2;
 
@@ -38,7 +38,7 @@ public class GenLayerZoom extends GenLayer {
             }
         }
 
-        int[] aint2 = this.intCache.a(k * l); // Poweruser
+        int[] aint2 = IntCache.a(k * l);
 
         for (k2 = 0; k2 < l; ++k2) {
             System.arraycopy(aint1, (k2 + (j & 1)) * i2 + (i & 1), aint2, k2 * k, k);
@@ -48,12 +48,10 @@ public class GenLayerZoom extends GenLayer {
     }
 
     public static GenLayer b(long i, GenLayer genlayer, int j) {
-        //Object object = genlayer;
-        GenLayer object = genlayer; // Poweruser
+        Object object = genlayer;
 
         for (int k = 0; k < j; ++k) {
             object = new GenLayerZoom(i + (long) k, (GenLayer) object);
-            object.setIntCache(genlayer.intCache); // Poweruser
         }
 
         return (GenLayer) object;

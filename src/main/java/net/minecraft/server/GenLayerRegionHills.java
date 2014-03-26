@@ -17,7 +17,7 @@ public class GenLayerRegionHills extends GenLayer {
     public int[] a(int i, int j, int k, int l) {
         int[] aint = this.a.a(i - 1, j - 1, k + 2, l + 2);
         int[] aint1 = this.d.a(i - 1, j - 1, k + 2, l + 2);
-        int[] aint2 = this.intCache.a(k * l); // Poweruser
+        int[] aint2 = IntCache.a(k * l);
 
         for (int i1 = 0; i1 < l; ++i1) {
             for (int j1 = 0; j1 < k; ++j1) {

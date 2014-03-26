@@ -1,32 +1,17 @@
 package net.minecraft.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class IntCache {
-    /*
+
     private static int a = 256;
     private static List b = new ArrayList();
     private static List c = new ArrayList();
     private static List d = new ArrayList();
     private static List e = new ArrayList();
-    */
-    // Poweruser start
-    private int a = 256;
-    private List b = new ArrayList();
-    private List c = new ArrayList();
-    private List d = new ArrayList();
-    private List e = new ArrayList();
-    private static List<IntCache> allCaches = Collections.synchronizedList(new ArrayList<IntCache>());
 
-    public IntCache() {
-        allCaches.add(this);
-    }
-    // Poweruser end
-
-    //public static synchronized int[] a(int i) {
-    public synchronized int[] a(int i) { // Poweruser
+    public static synchronized int[] a(int i) {
         int[] aint;
 
         if (i <= 256) {
@@ -57,7 +42,7 @@ public class IntCache {
         }
     }
 
-    public synchronized void a() { // Poweruser
+    public static synchronized void a() {
         if (!d.isEmpty()) {
             d.remove(d.size() - 1);
         }
@@ -73,16 +58,6 @@ public class IntCache {
     }
 
     public static synchronized String b() {
-      //return "cache: " + d.size() + ", tcache: " + b.size() + ", allocated: " + e.size() + ", tallocated: " + c.size();
-        // Poweruser start
-        int d = 0, b = 0, e = 0, c = 0;
-        for(IntCache ic: allCaches) {
-            d += ic.d.size();
-            b += ic.b.size();
-            e += ic.e.size();
-            c += ic.c.size();
-        }
-        return "cache: " + d + ", tcache: " + b + ", allocated: " + e + ", tallocated: " + c;
-        // Poweruser end
+        return "cache: " + d.size() + ", tcache: " + b.size() + ", allocated: " + e.size() + ", tallocated: " + c.size();
     }
 }
