@@ -5,13 +5,27 @@ import java.util.List;
 
 public class IntCache {
 
-    private static int a = 256;
-    private static List b = new ArrayList();
-    private static List c = new ArrayList();
-    private static List d = new ArrayList();
-    private static List e = new ArrayList();
+    // Poweruser start
+    private static final ThreadLocal<IntCache> caches = new ThreadLocal<IntCache>() {
+        @Override
+        protected IntCache initialValue() {
+            return new IntCache();
+        }
+    };
 
-    public static synchronized int[] a(int i) {
+    // removed static
+    private int a = 256;
+    private List b = new ArrayList();
+    private List c = new ArrayList();
+    private List d = new ArrayList();
+    private List e = new ArrayList();
+
+    public static int[] a(int i) { // removed synchronized
+        return caches.get().aOriginal(i);
+    }
+
+    public int[] aOriginal(int i) {
+    // Poweruser end
         int[] aint;
 
         if (i <= 256) {
@@ -42,7 +56,13 @@ public class IntCache {
         }
     }
 
-    public static synchronized void a() {
+    // Poweruser start
+    public static void a() { // removed synchronized
+        caches.get().aOriginal();
+    }
+
+    public void aOriginal() {
+    // Poweruser end
         if (!d.isEmpty()) {
             d.remove(d.size() - 1);
         }
@@ -58,6 +78,7 @@ public class IntCache {
     }
 
     public static synchronized String b() {
-        return "cache: " + d.size() + ", tcache: " + b.size() + ", allocated: " + e.size() + ", tallocated: " + c.size();
+        //return "cache: " + d.size() + ", tcache: " + b.size() + ", allocated: " + e.size() + ", tallocated: " + c.size();
+        return "Debug output currently not supported"; // Poweruser
     }
 }
