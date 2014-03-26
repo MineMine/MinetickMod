@@ -1,6 +1,7 @@
 package net.minecraft.server;
 
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BiomeDecorator {
 
@@ -64,11 +65,73 @@ public class BiomeDecorator {
         this.F = 3;
         this.G = 1;
         this.I = true;
+        this.alternativeDecorators = new ConcurrentLinkedQueue<BiomeDecorator>();
     }
+
+    // Poweruser start
+    private ConcurrentLinkedQueue<BiomeDecorator> alternativeDecorators;
+
+    private BiomeDecorator(BiomeDecorator decorator) {
+        this.f = decorator.f;
+        this.g = decorator.g;
+        this.h = decorator.h;
+        this.i = decorator.i;
+        this.j = decorator.j;
+        this.k = decorator.k;
+        this.l = decorator.l;
+        this.m = decorator.m;
+        this.n = decorator.n;
+        this.o = decorator.o;
+        this.p = decorator.p;
+        this.q = decorator.q;
+        this.r = decorator.r;
+        this.s = decorator.s;
+        this.t = decorator.t;
+        this.u = decorator.u;
+        this.v = decorator.v;
+        this.w = decorator.w;
+        this.x = decorator.x;
+        this.y = decorator.y;
+        this.z = decorator.z;
+        this.A = decorator.A;
+        this.B = decorator.B;
+        this.C = decorator.C;
+        this.D = decorator.D;
+        this.E = decorator.E;
+        this.F = decorator.F;
+        this.G = decorator.G;
+        this.H = decorator.H;
+        this.I = decorator.I;
+    }
+
+    protected BiomeDecorator shallowClone() {
+        return new BiomeDecorator(this);
+    }
+    // Poweruser end
 
     public void a(World world, Random random, BiomeBase biomebase, int i, int j) {
         if (this.a != null) {
-            throw new RuntimeException("Already decorating!!");
+            // Poweruser start
+            if(this.alternativeDecorators != null) {
+                BiomeDecorator decorator;
+                if(!this.alternativeDecorators.isEmpty()) {
+                    decorator = this.alternativeDecorators.poll();
+                } else {
+                    decorator = new BiomeDecorator(this);
+                }
+                decorator.a = world;
+                decorator.b = random;
+                decorator.c = i;
+                decorator.d = j;
+                decorator.a(biomebase);
+                decorator.a = null;
+                decorator.b = null;
+                this.alternativeDecorators.offer(decorator);
+            } else {
+                throw new IllegalStateException("Alternative BiomeDecorators are not allowed to create copies of themselves");
+            }
+            //throw new RuntimeException("Already decorating!!");
+            // Poweruser end
         } else {
             this.a = world;
             this.b = random;
