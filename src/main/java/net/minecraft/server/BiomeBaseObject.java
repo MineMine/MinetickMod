@@ -72,6 +72,7 @@ public class BiomeBaseObject {
     public final BiomeBase MESA_PLATEAU_F = (new BiomeMesa(38, false, true)).b(11573093).a("Mesa Plateau F").a(h).initBiomeBaseObject(this, true);
     public final BiomeBase MESA_PLATEAU = (new BiomeMesa(39, false, false)).b(13274213).a("Mesa Plateau").a(h).initBiomeBaseObject(this, true);
     public final Set n = Sets.newHashSet();
+    private static boolean initDone = false;
     
     public BiomeBaseObject() {
         this.biomes[this.MEGA_TAIGA_HILLS.id + 128] = this.biomes[this.MEGA_TAIGA.id + 128];
@@ -96,6 +97,13 @@ public class BiomeBaseObject {
         } else {
             aC.warn("Biome ID is out of bounds: " + i + ", defaulting to 0 (Ocean)");
             return this.OCEAN;
+        }
+    }
+    
+    public void initStaticFields() {
+        if(!initDone) {
+            initDone = true;
+            BiomeBase.initStaticFields(this.biomes, this.n);
         }
     }
 }

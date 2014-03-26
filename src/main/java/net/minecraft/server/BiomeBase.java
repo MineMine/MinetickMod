@@ -26,8 +26,9 @@ public abstract class BiomeBase {
     protected static final BiomeTemperature l = new BiomeTemperature(0.2F, 0.3F);
     protected static final BiomeTemperature m = new BiomeTemperature(-0.2F, 0.1F);
     private static final BiomeBase[] biomes = new BiomeBase[256];
+    private static boolean initDone = false; // Poweruser
     public static final Set n = Sets.newHashSet();
-    // Poweruser start - moved to class BiomeBaseObject
+    // Poweruser - moved to class BiomeBaseObject
     /*
     public static final BiomeBase OCEAN = (new BiomeOcean(0)).b(112).a("Ocean").a(c);
     public static final BiomeBase PLAINS = (new BiomePlains(1)).b(9286496).a("Plains");
@@ -70,51 +71,6 @@ public abstract class BiomeBase {
     public static final BiomeBase MESA_PLATEAU_F = (new BiomeMesa(38, false, true)).b(11573093).a("Mesa Plateau F").a(h);
     public static final BiomeBase MESA_PLATEAU = (new BiomeMesa(39, false, false)).b(13274213).a("Mesa Plateau").a(h);
     */
-
-    private static final BiomeBaseObject biomeBaseObject = new BiomeBaseObject();
-
-    public static final BiomeBase OCEAN = biomeBaseObject.OCEAN;
-    public static final BiomeBase PLAINS = biomeBaseObject.PLAINS;
-    public static final BiomeBase DESERT = biomeBaseObject.DESERT;
-    public static final BiomeBase EXTREME_HILLS = biomeBaseObject.EXTREME_HILLS;
-    public static final BiomeBase FOREST = biomeBaseObject.FOREST;
-    public static final BiomeBase TAIGA = biomeBaseObject.TAIGA;
-    public static final BiomeBase SWAMPLAND = biomeBaseObject.SWAMPLAND;
-    public static final BiomeBase RIVER = biomeBaseObject.RIVER;
-    public static final BiomeBase HELL = biomeBaseObject.HELL;
-    public static final BiomeBase SKY = biomeBaseObject.SKY;
-    public static final BiomeBase FROZEN_OCEAN = biomeBaseObject.FROZEN_OCEAN;
-    public static final BiomeBase FROZEN_RIVER = biomeBaseObject.FROZEN_RIVER;
-    public static final BiomeBase ICE_PLAINS = biomeBaseObject.ICE_PLAINS;
-    public static final BiomeBase ICE_MOUNTAINS = biomeBaseObject.ICE_MOUNTAINS;
-    public static final BiomeBase MUSHROOM_ISLAND = biomeBaseObject.MUSHROOM_ISLAND;
-    public static final BiomeBase MUSHROOM_SHORE = biomeBaseObject.MUSHROOM_SHORE;
-    public static final BiomeBase BEACH = biomeBaseObject.BEACH;
-    public static final BiomeBase DESERT_HILLS = biomeBaseObject.DESERT_HILLS;
-    public static final BiomeBase FOREST_HILLS = biomeBaseObject.FOREST_HILLS;
-    public static final BiomeBase TAIGA_HILLS = biomeBaseObject.TAIGA_HILLS;
-    public static final BiomeBase SMALL_MOUNTAINS = biomeBaseObject.SMALL_MOUNTAINS;
-    public static final BiomeBase JUNGLE = biomeBaseObject.JUNGLE;
-    public static final BiomeBase JUNGLE_HILLS = biomeBaseObject.JUNGLE_HILLS;
-    public static final BiomeBase JUNGLE_EDGE = biomeBaseObject.JUNGLE_EDGE;
-    public static final BiomeBase DEEP_OCEAN = biomeBaseObject.DEEP_OCEAN;
-    public static final BiomeBase STONE_BEACH = biomeBaseObject.STONE_BEACH;
-    public static final BiomeBase COLD_BEACH = biomeBaseObject.COLD_BEACH;
-    public static final BiomeBase BIRCH_FOREST = biomeBaseObject.BIRCH_FOREST;
-    public static final BiomeBase BIRCH_FOREST_HILLS = biomeBaseObject.BIRCH_FOREST_HILLS;
-    public static final BiomeBase ROOFED_FOREST = biomeBaseObject.ROOFED_FOREST;
-    public static final BiomeBase COLD_TAIGA = biomeBaseObject.COLD_TAIGA;
-    public static final BiomeBase COLD_TAIGA_HILLS = biomeBaseObject.COLD_TAIGA_HILLS;
-    public static final BiomeBase MEGA_TAIGA = biomeBaseObject.MEGA_TAIGA;
-    public static final BiomeBase MEGA_TAIGA_HILLS = biomeBaseObject.MEGA_TAIGA_HILLS;
-    public static final BiomeBase EXTREME_HILLS_PLUS = biomeBaseObject.EXTREME_HILLS_PLUS;
-    public static final BiomeBase SAVANNA = biomeBaseObject.SAVANNA;
-    public static final BiomeBase SAVANNA_PLATEAU = biomeBaseObject.SAVANNA_PLATEAU;
-    public static final BiomeBase MESA = biomeBaseObject.MESA;
-    public static final BiomeBase MESA_PLATEAU_F = biomeBaseObject.MESA_PLATEAU_F;
-    public static final BiomeBase MESA_PLATEAU = biomeBaseObject.MESA_PLATEAU;
-    // Poweruser end
-
     protected static final NoiseGenerator3 ac;
     protected static final NoiseGenerator3 ad;
     protected static final WorldGenTallPlant ae;
@@ -463,11 +419,14 @@ public abstract class BiomeBase {
         return this;
     }
 
-    static {
-        for(int i = 0; i < biomeBaseObject.biomes.length; i++) {
-            biomes[i] = biomeBaseObject.biomes[i];
+    public static void initStaticFields(BiomeBase[] array, Set set) {
+        if(!initDone) {
+            initDone = true;
+            for(int i = 0; i < array.length; i++) {
+                biomes[i] = array[i];
+            }
+            n.addAll(set);
         }
-        n.addAll(biomeBaseObject.n);
     }
     // Poweruser end
 }
